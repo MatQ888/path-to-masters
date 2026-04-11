@@ -1,16 +1,44 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useRef } from "react";
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
+import RegistrationForm from "@/components/RegistrationForm";
+import ActionSelection from "@/components/ActionSelection";
+import GiveInfoForm from "@/components/GiveInfoForm";
+import GetInfoQuestionnaire from "@/components/GetInfoQuestionnaire";
+import Results from "@/components/Results";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+type Step = "hero" | "register" | "action" | "give" | "get" | "results";
+
+const Index = () => {
+  const [step, setStep] = useState<Step>("hero");
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const mainRef = useRef<HTMLDivElement>(null);
+
+  const goTo = (s: Step) => {
+    setStep(s);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div ref={mainRef} className="min-h-screen">
+      <Navbar />
+      <div className="pt-16">
+        {step === "hero" && <HeroSection onStart={() => goTo("register")} />}
+        {step === "register" && <RegistrationForm onComplete={() => goTo("action")} />}
+        {step === "action" && (
+          <ActionSelection onSelect={(action) => goTo(action === "give" ? "give" : "get")} />
+        )}
+        {step === "give" && <GiveInfoForm onBack={() => goTo("action")} />}
+        {step === "get" && (
+          <GetInfoQuestionnaire
+            onComplete={(a) => { setAnswers(a); goTo("results"); }}
+            onBack={() => goTo("action")}
+          />
+        )}
+        {step === "results" && <Results answers={answers} onBack={() => goTo("get")} />}
+      </div>
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
