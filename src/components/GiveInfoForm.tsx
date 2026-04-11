@@ -62,7 +62,7 @@ const GiveInfoForm = ({ onBack }: GiveInfoFormProps) => {
           </button>
           <div className="bg-card rounded-2xl card-shadow p-8 md:p-10 space-y-6 text-center">
             <h2 className="text-3xl font-bold text-foreground">Dar información</h2>
-            <p className="text-muted-foreground">¿Desde qué perspectiva quieres aportar información?</p>
+            <p className="text-muted-foreground">Comparte datos sobre tu centro de estudios para ayudar a otros estudiantes</p>
             <div className="grid gap-4">
               <Button variant="outline" size="lg" className="h-auto py-6 flex flex-col gap-2" onClick={() => setUserType("universidad")}>
                 <span className="text-2xl">🏛️</span>
