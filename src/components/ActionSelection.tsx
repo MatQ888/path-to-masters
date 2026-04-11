@@ -25,7 +25,7 @@ const ActionSelection = ({ onSelect }: ActionSelectionProps) => {
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">Dar información</h3>
             <p className="text-muted-foreground text-sm">
-              Comparte datos sobre tu universidad para ayudar a otros estudiantes.
+              Comparte datos sobre tu centro de estudios para ayudar a otros estudiantes.
             </p>
           </button>
 
