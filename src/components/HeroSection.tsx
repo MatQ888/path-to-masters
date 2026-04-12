@@ -23,7 +23,7 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
           <img
             src={heroImage}
             alt="Ilustración de orientación académica y profesional"
-            className="rounded-2xl shadow-2xl w-full max-w-lg"
+            className="rounded-2xl w-full max-w-md drop-shadow-lg"
           />
           <Button variant="hero" size="lg" className="text-lg px-10 py-6 rounded-xl" onClick={onStart}>
             Empieza ahora
