@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, CheckCircle } from "lucide-react";
+import CompanyExperienceForm from "./CompanyExperienceForm";
 
 interface GiveInfoFormProps {
   onBack: () => void;
@@ -19,7 +20,9 @@ const stressLevels = [
 
 const GiveInfoForm = ({ onBack }: GiveInfoFormProps) => {
   const [submitted, setSubmitted] = useState(false);
-  const [userType, setUserType] = useState<"universidad" | "master" | "">("");
+  const [userType, setUserType] = useState<"universidad" | "master" | "empresa" | "">(
+    ""
+  );
   const [form, setForm] = useState({
     universidad: "",
     numEstudiantes: "",
@@ -74,11 +77,20 @@ const GiveInfoForm = ({ onBack }: GiveInfoFormProps) => {
                 <span className="font-semibold">Estudio o estudié un máster</span>
                 <span className="text-sm text-muted-foreground">Comparte tu experiencia</span>
               </Button>
+              <Button variant="outline" size="lg" className="h-auto py-6 flex flex-col gap-2" onClick={() => setUserType("empresa")}>
+                <span className="text-2xl">🏢</span>
+                <span className="font-semibold">Trabajo o trabajé en una empresa</span>
+                <span className="text-sm text-muted-foreground">Comparte tu experiencia profesional</span>
+              </Button>
             </div>
           </div>
         </div>
       </section>
     );
+  }
+
+  if (userType === "empresa") {
+    return <CompanyExperienceForm onBack={() => setUserType("")} />;
   }
 
   return (
