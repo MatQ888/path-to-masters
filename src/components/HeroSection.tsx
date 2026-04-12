@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-illustration.jpg";
+import heroImage from "@/assets/hero-illustration.png";
 
 interface HeroSectionProps {
   onStart: () => void;
