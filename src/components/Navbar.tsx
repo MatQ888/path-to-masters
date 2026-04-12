@@ -6,7 +6,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Rocket className="h-6 w-6 text-primary" />
-          <span className="font-bold text-lg text-foreground">Proyecta tu futuro</span>
+          <span className="font-bold text-lg text-foreground">P.Futuro</span>
         </div>
       </div>
     </nav>
