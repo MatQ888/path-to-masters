@@ -1,15 +1,16 @@
-import { useState, useMemo } from "react";
-import { ArrowLeft, HelpCircle } from "lucide-react";
+import { useState, useMemo, useRef } from "react";
+import { ArrowLeft, HelpCircle, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { sectorOptions, searchMasters } from "@/data/masterSuggestions";
 
 interface GetInfoQuestionnaireProps {
   onComplete: (answers: Record<string, string>) => void;
   onBack: () => void;
 }
 
-type StepType = "options" | "autocomplete" | "slider";
+type StepType = "options" | "autocomplete" | "slider" | "sectorCards" | "masterSearch";
 
 interface StepDef {
   key: string;
@@ -64,6 +65,17 @@ const isNational = (a: Record<string, string>) =>
 
 const allSteps: StepDef[] = [
   {
+    key: "sectorAcademico",
+    question: "¿En qué sector quieres especializarte?",
+    type: "sectorCards",
+  },
+  {
+    key: "masterBuscado",
+    question: "¿Qué máster estás buscando?",
+    type: "masterSearch",
+    condition: (a) => !!a.sectorAcademico,
+  },
+  {
     key: "presupuesto",
     question: "¿Cuál es tu presupuesto anual?",
     type: "slider",
@@ -107,13 +119,7 @@ const allSteps: StepDef[] = [
     condition: (a) => isInternational(a) && !!a.pais,
   },
   {
-    key: "tipo",
-    question: "¿Qué tipo de estudios buscas?",
-    type: "options",
-    options: ["Máster"],
-  },
-  {
-    key: "sector",
+    key: "sectorPublicoPrivado",
     question: "¿Prefieres sector público o privado?",
     type: "options",
     options: ["Público", "Privado"],
@@ -128,6 +134,9 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [searchText, setSearchText] = useState("");
   const [sliderValue, setSliderValue] = useState<number[]>([0, 60000]);
+  const [masterSearchText, setMasterSearchText] = useState("");
+  const [showMasterDropdown, setShowMasterDropdown] = useState(false);
+  const masterInputRef = useRef<HTMLInputElement>(null);
 
   const visibleSteps = useMemo(
     () => allSteps.filter((s) => !s.condition || s.condition(answers)),
@@ -135,6 +144,12 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
   );
 
   const current = visibleSteps[stepIndex];
+
+  const masterSuggestions = useMemo(() => {
+    if (!current || current.type !== "masterSearch") return [];
+    return searchMasters(answers.sectorAcademico || "", masterSearchText);
+  }, [current, answers.sectorAcademico, masterSearchText]);
+
   if (!current) return null;
 
   const totalSteps = visibleSteps.length;
@@ -159,13 +174,24 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
     if (current.key === "pais" && answers.pais !== value) {
       delete newAnswers.ciudadInternacional;
     }
+    if (current.key === "sectorAcademico" && answers.sectorAcademico !== value) {
+      delete newAnswers.masterBuscado;
+    }
     setAnswers(newAnswers);
     setSearchText("");
+    setMasterSearchText("");
+    setShowMasterDropdown(false);
 
     if (stepIndex < totalSteps - 1) {
       setTimeout(() => setStepIndex(stepIndex + 1), 300);
     } else {
       setTimeout(() => onComplete(newAnswers), 300);
+    }
+  };
+
+  const confirmMasterFreeText = () => {
+    if (masterSearchText.trim()) {
+      selectOption(masterSearchText.trim());
     }
   };
 
@@ -177,6 +203,8 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
   const goBack = () => {
     if (stepIndex > 0) {
       setSearchText("");
+      setMasterSearchText("");
+      setShowMasterDropdown(false);
       setStepIndex(stepIndex - 1);
     } else {
       onBack();
@@ -217,6 +245,84 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
             )}
           </div>
 
+          {/* Sector Cards */}
+          {current.type === "sectorCards" && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {sectorOptions.map((sector) => (
+                <button
+                  key={sector.id}
+                  onClick={() => selectOption(sector.id)}
+                  className={`group relative p-5 rounded-xl border-2 text-left transition-all duration-200 hover:shadow-md ${
+                    selected === sector.id
+                      ? "border-primary bg-accent shadow-md"
+                      : "border-border hover:border-primary/50 hover:bg-accent/50"
+                  }`}
+                >
+                  <span className="text-3xl block mb-2">{sector.icon}</span>
+                  <span className="font-semibold text-foreground block text-sm leading-tight">
+                    {sector.label}
+                  </span>
+                  <span className="text-xs text-muted-foreground mt-1 block">
+                    {sector.description}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Master Search */}
+          {current.type === "masterSearch" && (
+            <div className="space-y-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  ref={masterInputRef}
+                  placeholder="Escribe el máster que buscas..."
+                  value={masterSearchText}
+                  onChange={(e) => {
+                    setMasterSearchText(e.target.value);
+                    setShowMasterDropdown(true);
+                  }}
+                  onFocus={() => setShowMasterDropdown(true)}
+                  className="pl-10 text-base h-12 rounded-xl"
+                />
+              </div>
+
+              {showMasterDropdown && masterSuggestions.length > 0 && (
+                <div className="border border-border rounded-xl bg-card shadow-lg overflow-hidden animate-in fade-in-0 slide-in-from-top-2 duration-200">
+                  {masterSuggestions.map((master, i) => (
+                    <button
+                      key={master}
+                      onClick={() => selectOption(master)}
+                      className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-accent/80 flex items-center gap-3 ${
+                        i < masterSuggestions.length - 1 ? "border-b border-border/50" : ""
+                      }`}
+                    >
+                      <Search className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                      <span className="text-foreground">{master}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {masterSearchText.trim() && (
+                <button
+                  onClick={confirmMasterFreeText}
+                  className="w-full p-4 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity text-sm"
+                >
+                  Buscar "{masterSearchText.trim()}"
+                </button>
+              )}
+
+              {!masterSearchText && !selected && (
+                <p className="text-sm text-muted-foreground text-center py-2">
+                  Escribe para ver sugerencias o introduce tu propio máster
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Slider */}
           {current.type === "slider" && (
             <div className="space-y-6">
               <div className="text-center">
@@ -247,6 +353,7 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
             </div>
           )}
 
+          {/* Autocomplete input */}
           {current.type === "autocomplete" && (
             <div className="space-y-2">
               <Input
@@ -263,7 +370,8 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
             </div>
           )}
 
-          {current.type !== "slider" && (
+          {/* Options / autocomplete list */}
+          {(current.type === "options" || current.type === "autocomplete") && (
             <div className="space-y-3 max-h-64 overflow-y-auto">
               {filteredOptions.map((option) => (
                 <button
