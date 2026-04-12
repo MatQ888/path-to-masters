@@ -167,7 +167,7 @@ const RegistrationForm = ({ onComplete }: RegistrationFormProps) => {
           <ScrollArea className="h-[60vh] px-6 pb-6">
             <div className="space-y-4 text-sm text-muted-foreground leading-relaxed pr-4">
               <p>
-                La presente Política de Privacidad establece los términos en que <strong className="text-foreground">Proyecta tu futuro</strong> usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Estamos comprometidos con la seguridad de los datos de nuestros usuarios.
+                La presente Política de Privacidad establece los términos en que <strong className="text-foreground">Futureyou</strong> usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Estamos comprometidos con la seguridad de los datos de nuestros usuarios. usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Estamos comprometidos con la seguridad de los datos de nuestros usuarios.
               </p>
 
               <h3 className="text-base font-semibold text-foreground">1. Información que es recogida</h3>
@@ -204,7 +204,7 @@ const RegistrationForm = ({ onComplete }: RegistrationFormProps) => {
               <p>Nos reservamos el derecho de cambiar los términos de la presente Política de Privacidad en cualquier momento para adaptarla a novedades legislativas, jurisprudenciales o prácticas del mercado.</p>
 
               <p className="pt-2 text-xs border-t border-border mt-4">
-                <strong className="text-foreground">Proyecta tu futuro</strong><br />
+                <strong className="text-foreground">Futureyou</strong><br />
                 Contacto: [Inserta aquí tu correo de soporte]<br />
                 Última actualización: 12/04/2026
               </p>
