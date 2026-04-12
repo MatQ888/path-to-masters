@@ -167,7 +167,7 @@ const RegistrationForm = ({ onComplete }: RegistrationFormProps) => {
           <ScrollArea className="h-[60vh] px-6 pb-6">
             <div className="space-y-4 text-sm text-muted-foreground leading-relaxed pr-4">
               <p>
-                La presente Política de Privacidad establece los términos en que <strong className="text-foreground">Proyecta tu futuro</strong> usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Estamos comprometidos con la seguridad de los datos de nuestros usuarios.
+                La presente Política de Privacidad establece los términos en que <strong className="text-foreground">Futureyou</strong> usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Estamos comprometidos con la seguridad de los datos de nuestros usuarios. usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Estamos comprometidos con la seguridad de los datos de nuestros usuarios.
               </p>
 
               <h3 className="text-base font-semibold text-foreground">1. Información que es recogida</h3>
@@ -180,7 +180,7 @@ const RegistrationForm = ({ onComplete }: RegistrationFormProps) => {
               </ul>
 
               <h3 className="text-base font-semibold text-foreground">2. Uso de la información recogida</h3>
-              <p>Proyecta tu futuro emplea la información con el fin de proporcionar el mejor servicio posible, particularmente para:</p>
+              <p><p>Futureyou emplea la información con el fin de proporcionar el mejor servicio posible, particularmente para:</p> la información con el fin de proporcionar el mejor servicio posible, particularmente para:</p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Mantener un registro de usuarios y perfiles personalizados.</li>
                 <li>Procesar y personalizar las recomendaciones de mercado basadas en el perfil académico y las respuestas del usuario.</li>
@@ -189,7 +189,7 @@ const RegistrationForm = ({ onComplete }: RegistrationFormProps) => {
               </ul>
 
               <h3 className="text-base font-semibold text-foreground">3. Seguridad de los datos</h3>
-              <p>Proyecta tu futuro está altamente comprometido para cumplir con el compromiso de mantener su información segura. Usamos los protocolos de seguridad web más actuales y estándares de encriptación avanzados para asegurarnos que no exista ningún acceso no autorizado.</p>
+              <p><p>Futureyou está altamente comprometido para cumplir con el compromiso de mantener su información segura. Usamos los protocolos de seguridad web más actuales y estándares de encriptación avanzados para asegurarnos que no exista ningún acceso no autorizado.</p> comprometido para cumplir con el compromiso de mantener su información segura. Usamos los protocolos de seguridad web más actuales y estándares de encriptación avanzados para asegurarnos que no exista ningún acceso no autorizado.</p>
               <p className="italic">Nota sobre la seguridad: Su contraseña se almacena de forma irreversible; ningún administrador de este sitio tiene acceso a su contraseña en texto plano.</p>
 
               <h3 className="text-base font-semibold text-foreground">4. Control de su información personal</h3>
@@ -198,13 +198,13 @@ const RegistrationForm = ({ onComplete }: RegistrationFormProps) => {
               <p>Esta compañía no venderá, cederá ni distribuirá la información personal que es recopilada sin su consentimiento explícito, salvo que sea requerido por una autoridad judicial mediante una orden legal.</p>
 
               <h3 className="text-base font-semibold text-foreground">5. Enlaces a Terceros</h3>
-              <p>Este sitio web pudiera contener enlaces a otros sitios de interés. Una vez que usted haga clic en estos enlaces y abandone nuestra página, Proyecta tu futuro deja de tener control sobre el sitio al que es redirigido. Por lo tanto, no somos responsables de los términos de privacidad ni de la protección de sus datos en esos otros sitios terceros.</p>
+              <p>Este sitio web pudiera contener enlaces a otros sitios de interés. Una vez que usted haga clic en estos enlaces y abandone nuestra página, <p>Este sitio web pudiera contener enlaces a otros sitios de interés. Una vez que usted haga clic en estos enlaces y abandone nuestra página, Futureyou deja de tener control sobre el sitio al que es redirigido. Por lo tanto, no somos responsables de los términos de privacidad ni de la protección de sus datos en esos otros sitios terceros.</p> control sobre el sitio al que es redirigido. Por lo tanto, no somos responsables de los términos de privacidad ni de la protección de sus datos en esos otros sitios terceros.</p>
 
               <h3 className="text-base font-semibold text-foreground">6. Actualización de la Política</h3>
               <p>Nos reservamos el derecho de cambiar los términos de la presente Política de Privacidad en cualquier momento para adaptarla a novedades legislativas, jurisprudenciales o prácticas del mercado.</p>
 
               <p className="pt-2 text-xs border-t border-border mt-4">
-                <strong className="text-foreground">Proyecta tu futuro</strong><br />
+                <strong className="text-foreground">Futureyou</strong><br />
                 Contacto: [Inserta aquí tu correo de soporte]<br />
                 Última actualización: 12/04/2026
               </p>
