@@ -144,6 +144,12 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
   );
 
   const current = visibleSteps[stepIndex];
+
+  const masterSuggestions = useMemo(() => {
+    if (!current || current.type !== "masterSearch") return [];
+    return searchMasters(answers.sectorAcademico || "", masterSearchText);
+  }, [current, answers.sectorAcademico, masterSearchText]);
+
   if (!current) return null;
 
   const totalSteps = visibleSteps.length;
@@ -159,11 +165,6 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
     : current.type === "autocomplete"
     ? []
     : currentOptions;
-
-  const masterSuggestions = useMemo(() => {
-    if (current.type !== "masterSearch") return [];
-    return searchMasters(answers.sectorAcademico || "", masterSearchText);
-  }, [current.type, answers.sectorAcademico, masterSearchText]);
 
   const selectOption = (value: string) => {
     const newAnswers = { ...answers, [current.key]: value };
