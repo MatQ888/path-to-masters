@@ -19,7 +19,9 @@ const stressLevels = [
 
 const GiveInfoForm = ({ onBack }: GiveInfoFormProps) => {
   const [submitted, setSubmitted] = useState(false);
-  const [userType, setUserType] = useState<"universidad" | "master" | "">("");
+  const [userType, setUserType] = useState<"universidad" | "master" | "empresa" | "">(
+    ""
+  );
   const [form, setForm] = useState({
     universidad: "",
     numEstudiantes: "",
