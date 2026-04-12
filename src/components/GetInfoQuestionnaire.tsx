@@ -27,6 +27,35 @@ const ciudadesPorProvincia: Record<string, string[]> = {
   Galicia: ["Santiago de Compostela", "A Coruña", "Vigo", "Ourense", "Lugo", "Pontevedra"],
 };
 
+const paises = [
+  "Estados Unidos", "Argentina", "Alemania", "Francia", "Noruega",
+  "Reino Unido", "Países Bajos", "Suiza", "Canadá", "Australia",
+  "Japón", "Suecia", "Italia", "Dinamarca", "Singapur",
+];
+
+const ciudadesPorPais: Record<string, string[]> = {
+  "Estados Unidos": ["Nueva York", "Boston", "San Francisco", "Los Ángeles", "Chicago", "Cambridge"],
+  "Argentina": ["Buenos Aires", "Córdoba", "Rosario", "Mendoza"],
+  "Alemania": ["Berlín", "Múnich", "Hamburgo", "Frankfurt", "Heidelberg"],
+  "Francia": ["París", "Lyon", "Toulouse", "Marsella", "Estrasburgo"],
+  "Noruega": ["Oslo", "Bergen", "Trondheim", "Tromsø"],
+  "Reino Unido": ["Londres", "Oxford", "Cambridge", "Edimburgo", "Mánchester"],
+  "Países Bajos": ["Ámsterdam", "Róterdam", "La Haya", "Utrecht", "Leiden"],
+  "Suiza": ["Zúrich", "Ginebra", "Lausana", "Basilea", "Berna"],
+  "Canadá": ["Toronto", "Montreal", "Vancouver", "Ottawa"],
+  "Australia": ["Sídney", "Melbourne", "Brisbane", "Canberra"],
+  "Japón": ["Tokio", "Kioto", "Osaka", "Nagoya"],
+  "Suecia": ["Estocolmo", "Gotemburgo", "Lund", "Upsala"],
+  "Italia": ["Milán", "Roma", "Bolonia", "Turín", "Florencia"],
+  "Dinamarca": ["Copenhague", "Aarhus", "Odense"],
+  "Singapur": ["Singapur"],
+};
+
+const isInternational = (a: Record<string, string>) =>
+  a.lugar === "Internacional" || a.lugar === "Mixto (un año dentro y otro fuera)";
+const isNational = (a: Record<string, string>) =>
+  a.lugar === "Nacional" || a.lugar === "Mixto (un año dentro y otro fuera)";
+
 const allSteps: StepDef[] = [
   {
     key: "presupuesto",
@@ -45,14 +74,28 @@ const allSteps: StepDef[] = [
     question: "¿En qué provincia te gustaría estudiar?",
     type: "autocomplete",
     getOptions: () => provincias,
-    condition: (a) => a.lugar === "Nacional" || a.lugar === "Mixto (un año dentro y otro fuera)",
+    condition: (a) => isNational(a),
   },
   {
     key: "ciudad",
     question: "¿En qué ciudad te gustaría estudiar?",
     type: "autocomplete",
     getOptions: (a) => ciudadesPorProvincia[a.provincia] || [],
-    condition: (a) => (a.lugar === "Nacional" || a.lugar === "Mixto (un año dentro y otro fuera)") && !!a.provincia,
+    condition: (a) => isNational(a) && !!a.provincia,
+  },
+  {
+    key: "pais",
+    question: "¿En qué país te gustaría estudiar?",
+    type: "autocomplete",
+    getOptions: () => paises,
+    condition: (a) => isInternational(a),
+  },
+  {
+    key: "ciudadInternacional",
+    question: "¿En qué ciudad te gustaría estudiar?",
+    type: "autocomplete",
+    getOptions: (a) => ciudadesPorPais[a.pais] || [],
+    condition: (a) => isInternational(a) && !!a.pais,
   },
   {
     key: "tipo",
@@ -97,9 +140,11 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
 
   const selectOption = (value: string) => {
     const newAnswers = { ...answers, [current.key]: value };
-    // If province changes, clear city
     if (current.key === "provincia" && answers.provincia !== value) {
       delete newAnswers.ciudad;
+    }
+    if (current.key === "pais" && answers.pais !== value) {
+      delete newAnswers.ciudadInternacional;
     }
     setAnswers(newAnswers);
     setSearchText("");
@@ -128,7 +173,6 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
         </button>
 
         <div className="bg-card rounded-2xl card-shadow p-8 md:p-10 space-y-8">
-          {/* Progress */}
           <div className="space-y-2">
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>Paso {stepIndex + 1} de {totalSteps}</span>
