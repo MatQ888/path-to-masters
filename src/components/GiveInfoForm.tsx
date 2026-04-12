@@ -89,6 +89,10 @@ const GiveInfoForm = ({ onBack }: GiveInfoFormProps) => {
     );
   }
 
+  if (userType === "empresa") {
+    return <CompanyExperienceForm onBack={() => setUserType("")} />;
+  }
+
   return (
     <section className="min-h-screen flex items-center bg-secondary/50 py-20">
       <div className="container mx-auto px-4 max-w-lg">
