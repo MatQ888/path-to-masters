@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Shield } from "lucide-react";
 
 interface RegistrationData {
@@ -28,6 +31,8 @@ const RegistrationForm = ({ onComplete }: RegistrationFormProps) => {
     universidad: "",
     carrera: "",
   });
+  const [acceptedPolicy, setAcceptedPolicy] = useState(false);
+  const [policyOpen, setPolicyOpen] = useState(false);
 
   const update = (key: keyof RegistrationData, value: string | boolean) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -38,7 +43,8 @@ const RegistrationForm = ({ onComplete }: RegistrationFormProps) => {
     form.telefono.trim() &&
     form.password.trim() &&
     form.esEstudiante !== null &&
-    (form.esEstudiante === false || (form.universidad.trim() && form.carrera.trim()));
+    (form.esEstudiante === false || (form.universidad.trim() && form.carrera.trim())) &&
+    acceptedPolicy;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,12 +130,88 @@ const RegistrationForm = ({ onComplete }: RegistrationFormProps) => {
               <span>Tus datos son confidenciales y están protegidos.</span>
             </div>
 
+            {/* Política de privacidad */}
+            <div className="flex items-start gap-3">
+              <Checkbox
+                id="policy"
+                checked={acceptedPolicy}
+                onCheckedChange={(checked) => setAcceptedPolicy(checked === true)}
+                className="mt-0.5"
+              />
+              <label htmlFor="policy" className="text-sm text-muted-foreground leading-snug">
+                He leído y acepto la{" "}
+                <button
+                  type="button"
+                  className="text-primary underline hover:text-primary/80 font-medium"
+                  onClick={() => setPolicyOpen(true)}
+                >
+                  Política de Privacidad
+                </button>
+              </label>
+            </div>
+
             <Button type="submit" variant="cta" size="lg" className="w-full text-base rounded-xl" disabled={!isValid}>
               Registrarse
             </Button>
           </form>
         </div>
       </div>
+
+      {/* Dialog de Política de Privacidad */}
+      <Dialog open={policyOpen} onOpenChange={setPolicyOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] p-0">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle className="text-xl font-bold">Política de Privacidad</DialogTitle>
+            <DialogDescription>Lee detenidamente antes de aceptar</DialogDescription>
+          </DialogHeader>
+          <ScrollArea className="h-[60vh] px-6 pb-6">
+            <div className="space-y-4 text-sm text-muted-foreground leading-relaxed pr-4">
+              <p>
+                La presente Política de Privacidad establece los términos en que <strong className="text-foreground">Proyecta tu futuro</strong> usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Estamos comprometidos con la seguridad de los datos de nuestros usuarios.
+              </p>
+
+              <h3 className="text-base font-semibold text-foreground">1. Información que es recogida</h3>
+              <p>Nuestro sitio web podrá recoger información personal como:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li><strong className="text-foreground">Identificación:</strong> Nombre completo.</li>
+                <li><strong className="text-foreground">Información de contacto:</strong> Correo electrónico y número de teléfono.</li>
+                <li><strong className="text-foreground">Datos académicos:</strong> Institución o lugar de estudio.</li>
+                <li><strong className="text-foreground">Seguridad:</strong> Contraseña (la cual será encriptada mediante algoritmos de hashing para su protección).</li>
+              </ul>
+
+              <h3 className="text-base font-semibold text-foreground">2. Uso de la información recogida</h3>
+              <p>Proyecta tu futuro emplea la información con el fin de proporcionar el mejor servicio posible, particularmente para:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Mantener un registro de usuarios y perfiles personalizados.</li>
+                <li>Procesar y personalizar las recomendaciones de mercado basadas en el perfil académico y las respuestas del usuario.</li>
+                <li>Enviar notificaciones sobre actualizaciones del servicio o información relevante solicitada por el usuario.</li>
+                <li>Garantizar el acceso seguro a la plataforma mediante la verificación de credenciales.</li>
+              </ul>
+
+              <h3 className="text-base font-semibold text-foreground">3. Seguridad de los datos</h3>
+              <p>Proyecta tu futuro está altamente comprometido para cumplir con el compromiso de mantener su información segura. Usamos los protocolos de seguridad web más actuales y estándares de encriptación avanzados para asegurarnos que no exista ningún acceso no autorizado.</p>
+              <p className="italic">Nota sobre la seguridad: Su contraseña se almacena de forma irreversible; ningún administrador de este sitio tiene acceso a su contraseña en texto plano.</p>
+
+              <h3 className="text-base font-semibold text-foreground">4. Control de su información personal</h3>
+              <p>En cualquier momento usted puede restringir la recopilación o el uso de la información personal que es proporcionada a nuestro sitio web.</p>
+              <p>Usted tiene derecho a solicitar el acceso, rectificación o eliminación definitiva de sus datos de nuestra base de datos.</p>
+              <p>Esta compañía no venderá, cederá ni distribuirá la información personal que es recopilada sin su consentimiento explícito, salvo que sea requerido por una autoridad judicial mediante una orden legal.</p>
+
+              <h3 className="text-base font-semibold text-foreground">5. Enlaces a Terceros</h3>
+              <p>Este sitio web pudiera contener enlaces a otros sitios de interés. Una vez que usted haga clic en estos enlaces y abandone nuestra página, Proyecta tu futuro deja de tener control sobre el sitio al que es redirigido. Por lo tanto, no somos responsables de los términos de privacidad ni de la protección de sus datos en esos otros sitios terceros.</p>
+
+              <h3 className="text-base font-semibold text-foreground">6. Actualización de la Política</h3>
+              <p>Nos reservamos el derecho de cambiar los términos de la presente Política de Privacidad en cualquier momento para adaptarla a novedades legislativas, jurisprudenciales o prácticas del mercado.</p>
+
+              <p className="pt-2 text-xs border-t border-border mt-4">
+                <strong className="text-foreground">Proyecta tu futuro</strong><br />
+                Contacto: [Inserta aquí tu correo de soporte]<br />
+                Última actualización: 12/04/2026
+              </p>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
