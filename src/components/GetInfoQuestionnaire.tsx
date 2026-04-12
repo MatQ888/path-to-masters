@@ -1,13 +1,15 @@
 import { useState, useMemo } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, HelpCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface GetInfoQuestionnaireProps {
   onComplete: (answers: Record<string, string>) => void;
   onBack: () => void;
 }
 
-type StepType = "options" | "autocomplete";
+type StepType = "options" | "autocomplete" | "slider";
 
 interface StepDef {
   key: string;
@@ -16,6 +18,10 @@ interface StepDef {
   options?: string[];
   getOptions?: (answers: Record<string, string>) => string[];
   condition?: (answers: Record<string, string>) => boolean;
+  helpText?: string;
+  sliderMin?: number;
+  sliderMax?: number;
+  sliderStep?: number;
 }
 
 const provincias = ["Madrid", "Barcelona", "Andalucía", "Galicia"];
@@ -60,8 +66,11 @@ const allSteps: StepDef[] = [
   {
     key: "presupuesto",
     question: "¿Cuál es tu presupuesto anual?",
-    type: "options",
-    options: ["3.000 €", "5.000 €", "10.000 €", "20.000 €"],
+    type: "slider",
+    sliderMin: 0,
+    sliderMax: 60000,
+    sliderStep: 500,
+    helpText: "Esta pregunta se refiere a cuánto dinero estás dispuesto a pagar en un año por tus estudios, incluyendo matrícula y otros gastos asociados.",
   },
   {
     key: "lugar",
@@ -111,10 +120,14 @@ const allSteps: StepDef[] = [
   },
 ];
 
+const formatBudget = (value: number) =>
+  value.toLocaleString("es-ES") + " €";
+
 const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps) => {
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [searchText, setSearchText] = useState("");
+  const [sliderValue, setSliderValue] = useState<number[]>([0, 60000]);
 
   const visibleSteps = useMemo(
     () => allSteps.filter((s) => !s.condition || s.condition(answers)),
@@ -156,6 +169,11 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
     }
   };
 
+  const confirmSlider = () => {
+    const value = `${formatBudget(sliderValue[0])} - ${formatBudget(sliderValue[1])}`;
+    selectOption(value);
+  };
+
   const goBack = () => {
     if (stepIndex > 0) {
       setSearchText("");
@@ -183,7 +201,51 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-foreground">{current.question}</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-foreground">{current.question}</h2>
+            {current.helpText && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0">
+                    <HelpCircle className="h-5 w-5" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="text-sm max-w-xs">
+                  {current.helpText}
+                </PopoverContent>
+              </Popover>
+            )}
+          </div>
+
+          {current.type === "slider" && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <span className="text-3xl font-bold text-primary">
+                  {formatBudget(sliderValue[0])} — {formatBudget(sliderValue[1])}
+                </span>
+              </div>
+              <div className="px-2 space-y-4">
+                <Slider
+                  min={current.sliderMin}
+                  max={current.sliderMax}
+                  step={current.sliderStep}
+                  value={sliderValue}
+                  onValueChange={setSliderValue}
+                  minStepsBetweenThumbs={1}
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>{formatBudget(current.sliderMin ?? 0)}</span>
+                  <span>{formatBudget(current.sliderMax ?? 60000)}</span>
+                </div>
+              </div>
+              <button
+                onClick={confirmSlider}
+                className="w-full p-4 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+              >
+                Confirmar presupuesto
+              </button>
+            </div>
+          )}
 
           {current.type === "autocomplete" && (
             <div className="space-y-2">
@@ -201,31 +263,33 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
             </div>
           )}
 
-          <div className="space-y-3 max-h-64 overflow-y-auto">
-            {filteredOptions.map((option) => (
-              <button
-                key={option}
-                onClick={() => selectOption(option)}
-                className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${
-                  selected === option
-                    ? "border-primary bg-accent"
-                    : "border-border hover:border-primary/50 hover:bg-accent/50"
-                }`}
-              >
-                <span className="font-medium text-foreground">{option}</span>
-              </button>
-            ))}
-            {current.type === "autocomplete" && searchText.length > 0 && filteredOptions.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-4">
-                No se encontraron resultados para "{searchText}"
-              </p>
-            )}
-            {current.type === "autocomplete" && searchText.length === 0 && !selected && (
-              <p className="text-sm text-muted-foreground text-center py-4">
-                Empieza a escribir para ver las opciones disponibles
-              </p>
-            )}
-          </div>
+          {current.type !== "slider" && (
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+              {filteredOptions.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => selectOption(option)}
+                  className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${
+                    selected === option
+                      ? "border-primary bg-accent"
+                      : "border-border hover:border-primary/50 hover:bg-accent/50"
+                  }`}
+                >
+                  <span className="font-medium text-foreground">{option}</span>
+                </button>
+              ))}
+              {current.type === "autocomplete" && searchText.length > 0 && filteredOptions.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No se encontraron resultados para "{searchText}"
+                </p>
+              )}
+              {current.type === "autocomplete" && searchText.length === 0 && !selected && (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  Empieza a escribir para ver las opciones disponibles
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </section>
