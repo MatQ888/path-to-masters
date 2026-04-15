@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from "react";
-import { ArrowLeft, HelpCircle, Search } from "lucide-react";
+import { ArrowLeft, HelpCircle, Search, Building2, Monitor, CalendarDays } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -10,13 +10,14 @@ interface GetInfoQuestionnaireProps {
   onBack: () => void;
 }
 
-type StepType = "options" | "autocomplete" | "slider" | "sectorCards" | "masterSearch";
+type StepType = "options" | "autocomplete" | "slider" | "sectorCards" | "masterSearch" | "iconOptions";
 
 interface StepDef {
   key: string;
   question: string;
   type: StepType;
   options?: string[];
+  iconOptions?: { label: string; icon: React.ReactNode }[];
   getOptions?: (answers: Record<string, string>) => string[];
   condition?: (answers: Record<string, string>) => boolean;
   helpText?: string;
@@ -117,6 +118,16 @@ const allSteps: StepDef[] = [
     type: "autocomplete",
     getOptions: (a) => ciudadesPorPais[a.pais] || [],
     condition: (a) => isInternational(a) && !!a.pais,
+  },
+  {
+    key: "formatoEstudio",
+    question: "¿Qué formato de estudio prefieres?",
+    type: "iconOptions",
+    iconOptions: [
+      { label: "Presencial", icon: <Building2 className="h-7 w-7" /> },
+      { label: "Online", icon: <Monitor className="h-7 w-7" /> },
+      { label: "Semipresencial", icon: <CalendarDays className="h-7 w-7" /> },
+    ],
   },
   {
     key: "sectorPublicoPrivado",
@@ -367,6 +378,26 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
                   Seleccionado: <span className="font-semibold text-foreground">{selected}</span>
                 </p>
               )}
+            </div>
+          )}
+
+          {/* Icon Options */}
+          {current.type === "iconOptions" && current.iconOptions && (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {current.iconOptions.map((opt) => (
+                <button
+                  key={opt.label}
+                  onClick={() => selectOption(opt.label)}
+                  className={`flex flex-col items-center gap-3 p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
+                    selected === opt.label
+                      ? "border-primary bg-accent shadow-md"
+                      : "border-border hover:border-primary/50 hover:bg-accent/50"
+                  }`}
+                >
+                  <span className="text-primary">{opt.icon}</span>
+                  <span className="font-semibold text-foreground text-sm">{opt.label}</span>
+                </button>
+              ))}
             </div>
           )}
 
