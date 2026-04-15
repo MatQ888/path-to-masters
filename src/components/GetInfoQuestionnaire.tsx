@@ -138,7 +138,7 @@ const allSteps: StepDef[] = [
 ];
 
 const formatBudget = (value: number) =>
-  value.toLocaleString("es-ES") + " €";
+  value >= 60000 ? "+60.000 €" : value.toLocaleString("es-ES") + " €";
 
 const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps) => {
   const [stepIndex, setStepIndex] = useState(0);
