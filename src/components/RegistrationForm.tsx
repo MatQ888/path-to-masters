@@ -23,6 +23,8 @@ interface RegistrationData {
   carrera: string;
 }
 
+export type { RegistrationData };
+
 interface RegistrationFormProps {
   onComplete: (data: RegistrationData) => void;
 }

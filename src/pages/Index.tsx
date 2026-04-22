@@ -12,6 +12,7 @@ type Step = "hero" | "register" | "action" | "give" | "get" | "results";
 const Index = () => {
   const [step, setStep] = useState<Step>("hero");
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [apodo, setApodo] = useState<string>("");
   const mainRef = useRef<HTMLDivElement>(null);
 
   const goTo = (s: Step) => {
@@ -24,11 +25,18 @@ const Index = () => {
       <Navbar />
       <div className="pt-16">
         {step === "hero" && <HeroSection onStart={() => goTo("register")} />}
-        {step === "register" && <RegistrationForm onComplete={() => goTo("action")} />}
+        {step === "register" && (
+          <RegistrationForm
+            onComplete={(data) => {
+              if (data?.apodo) setApodo(data.apodo);
+              goTo("action");
+            }}
+          />
+        )}
         {step === "action" && (
           <ActionSelection onSelect={(action) => goTo(action === "give" ? "give" : "get")} />
         )}
-        {step === "give" && <GiveInfoForm onBack={() => goTo("action")} />}
+        {step === "give" && <GiveInfoForm onBack={() => goTo("action")} apodo={apodo} />}
         {step === "get" && (
           <GetInfoQuestionnaire
             onComplete={(a) => { setAnswers(a); goTo("results"); }}
