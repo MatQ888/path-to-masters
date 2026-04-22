@@ -5,10 +5,16 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Shield } from "lucide-react";
+
+export type Genero = "masculino" | "femenino" | "no_indicar";
 
 interface RegistrationData {
   nombre: string;
+  apellido: string;
+  apodo: string;
+  genero: Genero | "";
   email: string;
   telefono: string;
   password: string;
@@ -24,6 +30,9 @@ interface RegistrationFormProps {
 const RegistrationForm = ({ onComplete }: RegistrationFormProps) => {
   const [form, setForm] = useState<RegistrationData>({
     nombre: "",
+    apellido: "",
+    apodo: "",
+    genero: "",
     email: "",
     telefono: "",
     password: "",
@@ -39,6 +48,9 @@ const RegistrationForm = ({ onComplete }: RegistrationFormProps) => {
 
   const isValid =
     form.nombre.trim() &&
+    form.apellido.trim() &&
+    form.apodo.trim() &&
+    form.genero !== "" &&
     form.email.trim() &&
     form.telefono.trim() &&
     form.password.trim() &&
@@ -66,9 +78,35 @@ const RegistrationForm = ({ onComplete }: RegistrationFormProps) => {
                 Datos personales
               </h3>
               <div className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="nombre">Nombre</Label>
+                    <Input id="nombre" placeholder="Tu nombre" value={form.nombre} onChange={(e) => update("nombre", e.target.value)} maxLength={100} />
+                  </div>
+                  <div>
+                    <Label htmlFor="apellido">Apellido</Label>
+                    <Input id="apellido" placeholder="Tus apellidos" value={form.apellido} onChange={(e) => update("apellido", e.target.value)} maxLength={100} />
+                  </div>
+                </div>
                 <div>
-                  <Label htmlFor="nombre">Nombre</Label>
-                  <Input id="nombre" placeholder="Tu nombre completo" value={form.nombre} onChange={(e) => update("nombre", e.target.value)} maxLength={100} />
+                  <Label htmlFor="apodo">Apodo</Label>
+                  <Input id="apodo" placeholder="Ej. juanperez95" value={form.apodo} onChange={(e) => update("apodo", e.target.value)} maxLength={50} />
+                  <p className="text-xs text-muted-foreground mt-1.5 leading-snug">
+                    Este apodo será el que se usará para publicar toda la información que proporciones.
+                  </p>
+                </div>
+                <div>
+                  <Label htmlFor="genero">Género</Label>
+                  <Select value={form.genero} onValueChange={(v) => update("genero", v)}>
+                    <SelectTrigger id="genero">
+                      <SelectValue placeholder="Selecciona una opción" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="masculino">Masculino</SelectItem>
+                      <SelectItem value="femenino">Femenino</SelectItem>
+                      <SelectItem value="no_indicar">Prefiero no indicarlo</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <Label htmlFor="email">Email</Label>
