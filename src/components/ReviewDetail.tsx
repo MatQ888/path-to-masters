@@ -41,7 +41,16 @@ const ReviewDetail = ({ review, masterName, onBack }: ReviewDetailProps) => {
 
         {/* Header */}
         <div className="mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">{masterName}</h2>
+          {(() => {
+            // Derivamos el título dinámico: "Master en [Nombre] en [Universidad/Centro]"
+            const cleanName = masterName.replace(/^M[áa]ster en\s*/i, "").trim();
+            const centro = review.centro || review.ubicacion;
+            return (
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                Máster en {cleanName} <span className="text-muted-foreground font-semibold">en</span> {centro}
+              </h2>
+            );
+          })()}
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
               {review.userName.charAt(0)}

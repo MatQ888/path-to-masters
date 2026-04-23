@@ -8,6 +8,8 @@ export interface Review {
   especialidad: string;
   sector: string;
   ubicacion: string;
+  /** Universidad o centro donde se imparte (opcional). Si no existe, se usa la ubicación. */
+  centro?: string;
   formato: string;
   idiomas: string;
   duracion: string;
