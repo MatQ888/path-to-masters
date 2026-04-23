@@ -27,6 +27,7 @@ const Results = ({ answers, onBack }: ResultsProps) => {
   const [view, setView] = useState<View>("list");
   const [selectedMasterName, setSelectedMasterName] = useState<string>("");
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const { isSaved, toggle } = useLibrary();
 
   const isPublic = answers.sector === "Público";
   const filtered = mockMasters.filter((m) =>
