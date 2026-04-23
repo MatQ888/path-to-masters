@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { sectorOptions, searchMasters } from "@/data/masterSuggestions";
+import { CCAA, getProvincesByCCAA, COUNTRIES, getCitiesByCountry } from "@/data/locations";
 
 interface GetInfoQuestionnaireProps {
   onComplete: (answers: Record<string, string>) => void;
@@ -26,21 +27,16 @@ interface StepDef {
   sliderStep?: number;
 }
 
-const provincias = ["Madrid", "Barcelona", "Andalucía", "Galicia"];
+// CCAA -> nombre, mapeo derivado de los datos centralizados
+const ccaaNames = CCAA.map((c) => c.name);
 
-const ciudadesPorProvincia: Record<string, string[]> = {
-  Madrid: ["Madrid"],
-  Barcelona: ["Barcelona"],
-  Andalucía: ["Sevilla", "Málaga", "Granada", "Córdoba", "Almería", "Cádiz", "Huelva", "Jaén"],
-  Galicia: ["Santiago de Compostela", "A Coruña", "Vigo", "Ourense", "Lugo", "Pontevedra"],
-};
+// Para los países internacionales: usar lista centralizada excluyendo España
+const paisesInternacionales = COUNTRIES
+  .filter((c) => c.code !== "ES")
+  .map((c) => c.name)
+  .sort((a, b) => a.localeCompare(b, "es"));
 
-const paises = [
-  "Estados Unidos", "Argentina", "Alemania", "Francia", "Noruega",
-  "Reino Unido", "Países Bajos", "Suiza", "Canadá", "Australia",
-  "Japón", "Suecia", "Italia", "Dinamarca", "Singapur",
-];
-
+// Ciudades internacionales: catálogo principal por país (referencial, ampliable)
 const ciudadesPorPais: Record<string, string[]> = {
   "Estados Unidos": ["Nueva York", "Boston", "San Francisco", "Los Ángeles", "Chicago", "Cambridge"],
   "Argentina": ["Buenos Aires", "Córdoba", "Rosario", "Mendoza"],
@@ -57,6 +53,21 @@ const ciudadesPorPais: Record<string, string[]> = {
   "Italia": ["Milán", "Roma", "Bolonia", "Turín", "Florencia"],
   "Dinamarca": ["Copenhague", "Aarhus", "Odense"],
   "Singapur": ["Singapur"],
+  "Portugal": ["Lisboa", "Oporto", "Coimbra", "Braga"],
+  "Irlanda": ["Dublín", "Cork", "Galway"],
+  "Bélgica": ["Bruselas", "Amberes", "Gante", "Lovaina"],
+  "Austria": ["Viena", "Graz", "Salzburgo", "Innsbruck"],
+  "Finlandia": ["Helsinki", "Espoo", "Tampere"],
+  "Polonia": ["Varsovia", "Cracovia", "Wroclaw"],
+  "México": ["Ciudad de México", "Monterrey", "Guadalajara"],
+  "Chile": ["Santiago", "Valparaíso", "Concepción"],
+  "Colombia": ["Bogotá", "Medellín", "Cali"],
+  "Perú": ["Lima", "Arequipa", "Cusco"],
+  "Brasil": ["São Paulo", "Río de Janeiro", "Brasilia"],
+  "Nueva Zelanda": ["Auckland", "Wellington", "Christchurch"],
+  "China": ["Pekín", "Shanghái", "Hong Kong"],
+  "Singapur ": ["Singapur"],
+  "Emiratos Árabes Unidos": ["Dubái", "Abu Dabi"],
 };
 
 const isInternational = (a: Record<string, string>) =>
@@ -92,24 +103,28 @@ const allSteps: StepDef[] = [
     options: ["Nacional", "Internacional", "Mixto (un año dentro y otro fuera)"],
   },
   {
-    key: "provincia",
-    question: "¿En qué provincia te gustaría estudiar?",
+    key: "comunidadAutonoma",
+    question: "¿En qué Comunidad Autónoma te gustaría estudiar?",
     type: "autocomplete",
-    getOptions: () => provincias,
+    getOptions: () => ccaaNames,
     condition: (a) => isNational(a),
   },
   {
-    key: "ciudad",
-    question: "¿En qué ciudad te gustaría estudiar?",
+    key: "provincia",
+    question: "¿En qué provincia te gustaría estudiar?",
     type: "autocomplete",
-    getOptions: (a) => ciudadesPorProvincia[a.provincia] || [],
-    condition: (a) => isNational(a) && !!a.provincia,
+    getOptions: (a) => {
+      const ccaa = CCAA.find((c) => c.name === a.comunidadAutonoma);
+      if (!ccaa) return [];
+      return getProvincesByCCAA(ccaa.code).map((p) => p.name);
+    },
+    condition: (a) => isNational(a) && !!a.comunidadAutonoma,
   },
   {
     key: "pais",
     question: "¿En qué país te gustaría estudiar?",
     type: "autocomplete",
-    getOptions: () => paises,
+    getOptions: () => paisesInternacionales,
     condition: (a) => isInternational(a),
   },
   {
@@ -179,10 +194,17 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
 
   const selectOption = (value: string) => {
     const newAnswers = { ...answers, [current.key]: value };
-    if (current.key === "provincia" && answers.provincia !== value) {
-      delete newAnswers.ciudad;
+    if (current.key === "comunidadAutonoma" && answers.comunidadAutonoma !== value) {
+      delete newAnswers.provincia;
     }
     if (current.key === "pais" && answers.pais !== value) {
+      delete newAnswers.ciudadInternacional;
+    }
+    if (current.key === "lugar" && answers.lugar !== value) {
+      // Si cambia el ámbito, limpiamos selecciones dependientes
+      delete newAnswers.comunidadAutonoma;
+      delete newAnswers.provincia;
+      delete newAnswers.pais;
       delete newAnswers.ciudadInternacional;
     }
     if (current.key === "sectorAcademico" && answers.sectorAcademico !== value) {
