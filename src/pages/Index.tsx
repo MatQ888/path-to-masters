@@ -6,6 +6,7 @@ import ActionSelection from "@/components/ActionSelection";
 import GiveInfoForm from "@/components/GiveInfoForm";
 import GetInfoQuestionnaire from "@/components/GetInfoQuestionnaire";
 import Results from "@/components/Results";
+import { setCurrentUser } from "@/hooks/useCurrentUser";
 
 type Step = "hero" | "register" | "action" | "give" | "get" | "results";
 
