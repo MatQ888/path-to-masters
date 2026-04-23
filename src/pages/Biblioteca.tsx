@@ -129,7 +129,7 @@ const Biblioteca = () => {
       <main className="pt-16">
         <section className="container mx-auto px-4 max-w-5xl py-12">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/")}
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" /> Volver
@@ -178,14 +178,14 @@ const Biblioteca = () => {
             <div className="bg-card rounded-2xl border border-border p-12 text-center">
               <Bookmark className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
               <p className="text-lg font-medium text-foreground mb-2">
-                No has guardado ninguna opción todavía.
+                No has guardado nada aún.
               </p>
               <p className="text-sm text-muted-foreground mb-6">
-                Pulsa el icono de marcapáginas en cualquier máster para añadirlo aquí.
+                Explora másteres para añadirlos a tu biblioteca.
               </p>
               <Link to="/">
                 <Button variant="cta" className="rounded-xl">
-                  Explorar másters
+                  Explorar másteres
                 </Button>
               </Link>
             </div>

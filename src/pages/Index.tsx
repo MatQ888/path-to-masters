@@ -6,14 +6,19 @@ import ActionSelection from "@/components/ActionSelection";
 import GiveInfoForm from "@/components/GiveInfoForm";
 import GetInfoQuestionnaire from "@/components/GetInfoQuestionnaire";
 import Results from "@/components/Results";
-import { setCurrentUser } from "@/hooks/useCurrentUser";
+import { setCurrentUser, useCurrentUser } from "@/hooks/useCurrentUser";
 
 type Step = "hero" | "register" | "action" | "give" | "get" | "results";
 
 const Index = () => {
-  const [step, setStep] = useState<Step>("hero");
+  // Si el usuario ya se registró, saltamos directos a la selección de acción.
+  // Esto permite que botones como "Volver" o "Explorar másters" desde la
+  // Biblioteca lleven al usuario a la pantalla de elegir entre Dar/Obtener
+  // información, en lugar de obligarle a registrarse de nuevo.
+  const existingUser = useCurrentUser();
+  const [step, setStep] = useState<Step>(existingUser ? "action" : "hero");
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [apodo, setApodo] = useState<string>("");
+  const [apodo, setApodo] = useState<string>(existingUser?.apodo ?? "");
   const mainRef = useRef<HTMLDivElement>(null);
 
   const goTo = (s: Step) => {
