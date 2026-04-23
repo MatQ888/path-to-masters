@@ -29,7 +29,10 @@ const Index = () => {
         {step === "register" && (
           <RegistrationForm
             onComplete={(data) => {
-              if (data?.apodo) setApodo(data.apodo);
+              if (data?.apodo) {
+                setApodo(data.apodo);
+                setCurrentUser({ apodo: data.apodo, nombre: data.nombre });
+              }
               goTo("action");
             }}
           />
