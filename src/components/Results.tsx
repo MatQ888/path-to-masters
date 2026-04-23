@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MapPin, Euro, Building2, ArrowLeft, Clock } from "lucide-react";
+import { MapPin, Euro, Building2, ArrowLeft, Clock, Bookmark } from "lucide-react";
 import { mockReviewsByMaster, Review } from "@/data/mockReviews";
 import ReviewsListing from "@/components/ReviewsListing";
 import ReviewDetail from "@/components/ReviewDetail";
+import { useLibrary } from "@/hooks/useLibrary";
+import { toast } from "sonner";
 
 interface ResultsProps {
   answers: Record<string, string>;
