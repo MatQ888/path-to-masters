@@ -103,24 +103,28 @@ const allSteps: StepDef[] = [
     options: ["Nacional", "Internacional", "Mixto (un año dentro y otro fuera)"],
   },
   {
-    key: "provincia",
-    question: "¿En qué provincia te gustaría estudiar?",
+    key: "comunidadAutonoma",
+    question: "¿En qué Comunidad Autónoma te gustaría estudiar?",
     type: "autocomplete",
-    getOptions: () => provincias,
+    getOptions: () => ccaaNames,
     condition: (a) => isNational(a),
   },
   {
-    key: "ciudad",
-    question: "¿En qué ciudad te gustaría estudiar?",
+    key: "provincia",
+    question: "¿En qué provincia te gustaría estudiar?",
     type: "autocomplete",
-    getOptions: (a) => ciudadesPorProvincia[a.provincia] || [],
-    condition: (a) => isNational(a) && !!a.provincia,
+    getOptions: (a) => {
+      const ccaa = CCAA.find((c) => c.name === a.comunidadAutonoma);
+      if (!ccaa) return [];
+      return getProvincesByCCAA(ccaa.code).map((p) => p.name);
+    },
+    condition: (a) => isNational(a) && !!a.comunidadAutonoma,
   },
   {
     key: "pais",
     question: "¿En qué país te gustaría estudiar?",
     type: "autocomplete",
-    getOptions: () => paises,
+    getOptions: () => paisesInternacionales,
     condition: (a) => isInternational(a),
   },
   {
