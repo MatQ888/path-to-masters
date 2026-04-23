@@ -27,21 +27,16 @@ interface StepDef {
   sliderStep?: number;
 }
 
-const provincias = ["Madrid", "Barcelona", "Andalucía", "Galicia"];
+// CCAA -> nombre, mapeo derivado de los datos centralizados
+const ccaaNames = CCAA.map((c) => c.name);
 
-const ciudadesPorProvincia: Record<string, string[]> = {
-  Madrid: ["Madrid"],
-  Barcelona: ["Barcelona"],
-  Andalucía: ["Sevilla", "Málaga", "Granada", "Córdoba", "Almería", "Cádiz", "Huelva", "Jaén"],
-  Galicia: ["Santiago de Compostela", "A Coruña", "Vigo", "Ourense", "Lugo", "Pontevedra"],
-};
+// Para los países internacionales: usar lista centralizada excluyendo España
+const paisesInternacionales = COUNTRIES
+  .filter((c) => c.code !== "ES")
+  .map((c) => c.name)
+  .sort((a, b) => a.localeCompare(b, "es"));
 
-const paises = [
-  "Estados Unidos", "Argentina", "Alemania", "Francia", "Noruega",
-  "Reino Unido", "Países Bajos", "Suiza", "Canadá", "Australia",
-  "Japón", "Suecia", "Italia", "Dinamarca", "Singapur",
-];
-
+// Ciudades internacionales: catálogo principal por país (referencial, ampliable)
 const ciudadesPorPais: Record<string, string[]> = {
   "Estados Unidos": ["Nueva York", "Boston", "San Francisco", "Los Ángeles", "Chicago", "Cambridge"],
   "Argentina": ["Buenos Aires", "Córdoba", "Rosario", "Mendoza"],
@@ -58,6 +53,21 @@ const ciudadesPorPais: Record<string, string[]> = {
   "Italia": ["Milán", "Roma", "Bolonia", "Turín", "Florencia"],
   "Dinamarca": ["Copenhague", "Aarhus", "Odense"],
   "Singapur": ["Singapur"],
+  "Portugal": ["Lisboa", "Oporto", "Coimbra", "Braga"],
+  "Irlanda": ["Dublín", "Cork", "Galway"],
+  "Bélgica": ["Bruselas", "Amberes", "Gante", "Lovaina"],
+  "Austria": ["Viena", "Graz", "Salzburgo", "Innsbruck"],
+  "Finlandia": ["Helsinki", "Espoo", "Tampere"],
+  "Polonia": ["Varsovia", "Cracovia", "Wroclaw"],
+  "México": ["Ciudad de México", "Monterrey", "Guadalajara"],
+  "Chile": ["Santiago", "Valparaíso", "Concepción"],
+  "Colombia": ["Bogotá", "Medellín", "Cali"],
+  "Perú": ["Lima", "Arequipa", "Cusco"],
+  "Brasil": ["São Paulo", "Río de Janeiro", "Brasilia"],
+  "Nueva Zelanda": ["Auckland", "Wellington", "Christchurch"],
+  "China": ["Pekín", "Shanghái", "Hong Kong"],
+  "Singapur ": ["Singapur"],
+  "Emiratos Árabes Unidos": ["Dubái", "Abu Dabi"],
 };
 
 const isInternational = (a: Record<string, string>) =>
