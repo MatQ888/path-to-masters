@@ -194,10 +194,17 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
 
   const selectOption = (value: string) => {
     const newAnswers = { ...answers, [current.key]: value };
-    if (current.key === "provincia" && answers.provincia !== value) {
-      delete newAnswers.ciudad;
+    if (current.key === "comunidadAutonoma" && answers.comunidadAutonoma !== value) {
+      delete newAnswers.provincia;
     }
     if (current.key === "pais" && answers.pais !== value) {
+      delete newAnswers.ciudadInternacional;
+    }
+    if (current.key === "lugar" && answers.lugar !== value) {
+      // Si cambia el ámbito, limpiamos selecciones dependientes
+      delete newAnswers.comunidadAutonoma;
+      delete newAnswers.provincia;
+      delete newAnswers.pais;
       delete newAnswers.ciudadInternacional;
     }
     if (current.key === "sectorAcademico" && answers.sectorAcademico !== value) {
