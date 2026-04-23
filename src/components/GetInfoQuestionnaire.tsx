@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { sectorOptions, searchMasters } from "@/data/masterSuggestions";
+import { CCAA, getProvincesByCCAA, COUNTRIES, getCitiesByCountry } from "@/data/locations";
 
 interface GetInfoQuestionnaireProps {
   onComplete: (answers: Record<string, string>) => void;
