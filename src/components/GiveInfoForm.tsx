@@ -239,8 +239,9 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
             </Button>
             <Button
               type="button"
+              variant="cta"
               onClick={onBack}
-              className="rounded-xl gap-2 bg-primary hover:bg-primary/90"
+              className="rounded-xl gap-2 text-primary-foreground"
             >
               Volver al inicio
             </Button>

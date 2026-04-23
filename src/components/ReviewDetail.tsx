@@ -3,7 +3,14 @@ import { Review } from "@/data/mockReviews";
 
 interface ReviewDetailProps {
   review: Review;
+  /**
+   * Si el flujo viene del nivel 2 (centro elegido), `masterName` ya contiene
+   * "Máster en X en Y" y se renderiza tal cual. Si no, se compone con
+   * `centerName` o, en su defecto, con la ubicación de la reseña.
+   */
   masterName: string;
+  /** Centro/universidad seleccionado en el nivel 2. Opcional. */
+  centerName?: string;
   onBack: () => void;
 }
 
@@ -28,7 +35,7 @@ const InfoItem = ({ icon: Icon, label, value }: { icon: React.ElementType; label
   </div>
 );
 
-const ReviewDetail = ({ review, masterName, onBack }: ReviewDetailProps) => {
+const ReviewDetail = ({ review, masterName, centerName, onBack }: ReviewDetailProps) => {
   return (
     <section className="min-h-screen bg-secondary/30 py-20">
       <div className="container mx-auto px-4 max-w-4xl">
@@ -42,9 +49,18 @@ const ReviewDetail = ({ review, masterName, onBack }: ReviewDetailProps) => {
         {/* Header */}
         <div className="mb-10">
           {(() => {
-            // Derivamos el título dinámico: "Master en [Nombre] en [Universidad/Centro]"
+            // Si masterName ya incluye " en ", lo mostramos tal cual.
+            // Si no, componemos con centerName o, en su defecto, con la ubicación.
+            const alreadyComposed = / en /i.test(masterName.replace(/^M[áa]ster en\s*/i, ""));
+            if (alreadyComposed) {
+              return (
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                  {masterName}
+                </h2>
+              );
+            }
             const cleanName = masterName.replace(/^M[áa]ster en\s*/i, "").trim();
-            const centro = review.centro || review.ubicacion;
+            const centro = centerName || review.centro || review.ubicacion;
             return (
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
                 Máster en {cleanName} <span className="text-muted-foreground font-semibold">en</span> {centro}
