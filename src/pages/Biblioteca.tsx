@@ -178,14 +178,14 @@ const Biblioteca = () => {
             <div className="bg-card rounded-2xl border border-border p-12 text-center">
               <Bookmark className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
               <p className="text-lg font-medium text-foreground mb-2">
-                No has guardado ninguna opción todavía.
+                No has guardado nada aún.
               </p>
               <p className="text-sm text-muted-foreground mb-6">
-                Pulsa el icono de marcapáginas en cualquier máster para añadirlo aquí.
+                Explora másteres para añadirlos a tu biblioteca.
               </p>
               <Link to="/">
                 <Button variant="cta" className="rounded-xl">
-                  Explorar másters
+                  Explorar másteres
                 </Button>
               </Link>
             </div>
