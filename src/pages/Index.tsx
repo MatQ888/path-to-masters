@@ -1,24 +1,25 @@
 import { useState, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
-import RegistrationForm from "@/components/RegistrationForm";
 import ActionSelection from "@/components/ActionSelection";
 import GiveInfoForm from "@/components/GiveInfoForm";
 import GetInfoQuestionnaire from "@/components/GetInfoQuestionnaire";
 import Results from "@/components/Results";
-import { setCurrentUser, useCurrentUser } from "@/hooks/useCurrentUser";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { setSessionStarted, useSessionStarted } from "@/hooks/useSessionStarted";
 
-type Step = "hero" | "register" | "action" | "give" | "get" | "results";
+type Step = "hero" | "action" | "give" | "get" | "results";
 
 const Index = () => {
-  // Si el usuario ya se registró, saltamos directos a la selección de acción.
-  // Esto permite que botones como "Volver" o "Explorar másters" desde la
-  // Biblioteca lleven al usuario a la pantalla de elegir entre Dar/Obtener
-  // información, en lugar de obligarle a registrarse de nuevo.
+  // Si ya se pulsó "Comenzar" en esta pestaña, o si hay un usuario registrado,
+  // saltamos el landing y mostramos directamente la selección Dar/Obtener.
+  const sessionStarted = useSessionStarted();
   const existingUser = useCurrentUser();
-  const [step, setStep] = useState<Step>(existingUser ? "action" : "hero");
+  const skipHero = sessionStarted || !!existingUser;
+
+  const [step, setStep] = useState<Step>(skipHero ? "action" : "hero");
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [apodo, setApodo] = useState<string>(existingUser?.apodo ?? "");
+  const apodo = existingUser?.apodo ?? "";
   const mainRef = useRef<HTMLDivElement>(null);
 
   const goTo = (s: Step) => {
@@ -26,22 +27,16 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleStart = () => {
+    setSessionStarted(true);
+    goTo("action");
+  };
+
   return (
     <div ref={mainRef} className="min-h-screen">
       <Navbar />
       <div className="pt-16">
-        {step === "hero" && <HeroSection onStart={() => goTo("register")} />}
-        {step === "register" && (
-          <RegistrationForm
-            onComplete={(data) => {
-              if (data?.apodo) {
-                setApodo(data.apodo);
-                setCurrentUser({ apodo: data.apodo, nombre: data.nombre });
-              }
-              goTo("action");
-            }}
-          />
-        )}
+        {step === "hero" && <HeroSection onStart={handleStart} />}
         {step === "action" && (
           <ActionSelection onSelect={(action) => goTo(action === "give" ? "give" : "get")} />
         )}
