@@ -1,5 +1,6 @@
-import { Home, Globe, Library, User, LogOut, FileText, Settings, LogIn } from "lucide-react";
+import { Home, Globe, Library, User, LogOut, FileText, Settings, LogIn, Check } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useCurrentUser, setCurrentUser } from "@/hooks/useCurrentUser";
 import { useLibrary } from "@/hooks/useLibrary";
 import { setSessionStarted } from "@/hooks/useSessionStarted";
@@ -17,9 +18,9 @@ const Navbar = () => {
   const user = useCurrentUser();
   const { items } = useLibrary();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   const goHome = () => {
-    // Vuelve a la pantalla de selección Dar/Obtener (no al landing).
     setSessionStarted(true);
     navigate("/");
   };
@@ -29,10 +30,10 @@ const Navbar = () => {
     navigate("/");
   };
 
-  // TODO: cambio real de idioma en Fase B (i18n).
-  const setLang = (_lang: "es" | "en") => {
-    // Placeholder hasta que se conecte react-i18next.
+  const setLang = (lang: "es" | "en") => {
+    void i18n.changeLanguage(lang);
   };
+  const currentLang = (i18n.resolvedLanguage ?? i18n.language ?? "es").slice(0, 2);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-border">
