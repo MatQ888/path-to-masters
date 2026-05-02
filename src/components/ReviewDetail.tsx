@@ -1,5 +1,8 @@
-import { ArrowLeft, MapPin, Building2, BookOpen, Monitor, Languages, Clock, Euro, BarChart3, Users, Briefcase, Target, DollarSign, MessageSquare, Heart, GraduationCap, Handshake, Star } from "lucide-react";
+import { ArrowLeft, MapPin, Building2, BookOpen, Monitor, Languages, Clock, Euro, BarChart3, Users, Briefcase, Target, DollarSign, MessageSquare, Heart, GraduationCap, Handshake, Star, BookHeart } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Review } from "@/data/mockReviews";
+import { useReviewLikes } from "@/hooks/useReviewLikes";
+import { useReviewTranslation } from "@/hooks/useReviewTranslation";
 
 interface ReviewDetailProps {
   review: Review;
@@ -36,6 +39,14 @@ const InfoItem = ({ icon: Icon, label, value }: { icon: React.ElementType; label
 );
 
 const ReviewDetail = ({ review, masterName, centerName, onBack }: ReviewDetailProps) => {
+  const { t } = useTranslation();
+  const { getLikes, hasLiked, toggleLike } = useReviewLikes();
+  const { translate, clear, getTranslation, isLoading } = useReviewTranslation();
+  const liked = hasLiked(review.id);
+  const likeCount = getLikes(review.id);
+  const translated = getTranslation(review.id);
+  const loading = isLoading(review.id);
+
   return (
     <section className="min-h-screen bg-secondary/30 py-20">
       <div className="container mx-auto px-4 max-w-4xl">
