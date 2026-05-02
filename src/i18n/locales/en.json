@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "home": "Home",
+    "language": "Language",
+    "library": "Library",
+    "myAccount": "My account",
+    "myProfile": "My Profile",
+    "myPublications": "My Publications",
+    "settings": "Settings",
+    "logout": "Log out",
+    "login": "Sign in",
+    "loginShort": "Sign in"
+  },
+  "reviews": {
+    "sortBy": "Sort by",
+    "mostRelevant": "Most relevant",
+    "mostRecent": "Most recent",
+    "mostPopular": "Most popular",
+    "averageOf": "{{value}} average",
+    "reviewsCount": "{{count}} reviews",
+    "viewDetail": "View full detail →",
+    "empty": "No reviews available for this program yet.",
+    "backToRecommendations": "Back to recommendations",
+    "like": "Like",
+    "unlike": "Remove like",
+    "translate": "Translate comment",
+    "translating": "Translating…",
+    "showOriginal": "Show original"
+  }
+}

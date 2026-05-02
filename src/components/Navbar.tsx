@@ -1,5 +1,6 @@
-import { Home, Globe, Library, User, LogOut, FileText, Settings, LogIn } from "lucide-react";
+import { Home, Globe, Library, User, LogOut, FileText, Settings, LogIn, Check } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useCurrentUser, setCurrentUser } from "@/hooks/useCurrentUser";
 import { useLibrary } from "@/hooks/useLibrary";
 import { setSessionStarted } from "@/hooks/useSessionStarted";
@@ -17,9 +18,9 @@ const Navbar = () => {
   const user = useCurrentUser();
   const { items } = useLibrary();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   const goHome = () => {
-    // Vuelve a la pantalla de selección Dar/Obtener (no al landing).
     setSessionStarted(true);
     navigate("/");
   };
@@ -29,10 +30,10 @@ const Navbar = () => {
     navigate("/");
   };
 
-  // TODO: cambio real de idioma en Fase B (i18n).
-  const setLang = (_lang: "es" | "en") => {
-    // Placeholder hasta que se conecte react-i18next.
+  const setLang = (lang: "es" | "en") => {
+    void i18n.changeLanguage(lang);
   };
+  const currentLang = (i18n.resolvedLanguage ?? i18n.language ?? "es").slice(0, 2);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-border">
@@ -56,10 +57,16 @@ const Navbar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
-              <DropdownMenuLabel>Idioma</DropdownMenuLabel>
+              <DropdownMenuLabel>{t("nav.language")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setLang("es")}>Español</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setLang("en")}>English</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLang("es")}>
+                <span className="flex-1">Español</span>
+                {currentLang === "es" && <Check className="h-4 w-4 text-primary" />}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLang("en")}>
+                <span className="flex-1">English</span>
+                {currentLang === "en" && <Check className="h-4 w-4 text-primary" />}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -84,7 +91,7 @@ const Navbar = () => {
               aria-label="Abrir Biblioteca"
             >
               <Library className="h-5 w-5 text-primary" />
-              <span className="hidden sm:inline">Biblioteca</span>
+              <span className="hidden sm:inline">{t("nav.library")}</span>
               {items.length > 0 && (
                 <span className="absolute -top-1 -right-1 sm:static sm:ml-1 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
                   {items.length}
@@ -104,20 +111,20 @@ const Navbar = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
+                <DropdownMenuLabel>{t("nav.myAccount")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate("/perfil")}>
-                  <User className="h-4 w-4 mr-2" /> Mi Perfil
+                  <User className="h-4 w-4 mr-2" /> {t("nav.myProfile")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/mis-publicaciones")}>
-                  <FileText className="h-4 w-4 mr-2" /> Mis Publicaciones
+                  <FileText className="h-4 w-4 mr-2" /> {t("nav.myPublications")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/configuracion")}>
-                  <Settings className="h-4 w-4 mr-2" /> Configuración
+                  <Settings className="h-4 w-4 mr-2" /> {t("nav.settings")}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
-                  <LogOut className="h-4 w-4 mr-2" /> Cerrar sesión
+                  <LogOut className="h-4 w-4 mr-2" /> {t("nav.logout")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -129,8 +136,8 @@ const Navbar = () => {
               className="gap-2"
             >
               <LogIn className="h-4 w-4" />
-              <span className="hidden sm:inline">Iniciar sesión</span>
-              <span className="sm:hidden">Entrar</span>
+              <span className="hidden sm:inline">{t("nav.login")}</span>
+              <span className="sm:hidden">{t("nav.loginShort")}</span>
             </Button>
           )}
         </div>
