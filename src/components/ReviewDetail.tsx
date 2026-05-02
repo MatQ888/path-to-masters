@@ -259,11 +259,49 @@ const ReviewDetail = ({ review, masterName, centerName, onBack }: ReviewDetailPr
 
           {/* Bloque 6: Comentario del Usuario */}
           <div className="bg-card rounded-2xl p-6 border border-border">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-4">
-              <MessageSquare className="h-5 w-5 text-primary" /> Comentario del Usuario
-            </h3>
+            <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+              <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                <MessageSquare className="h-5 w-5 text-primary" /> Comentario del Usuario
+              </h3>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    translated ? clear(review.id) : void translate(review.id, review.fullComment)
+                  }
+                  disabled={loading}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary text-xs font-medium text-foreground hover:bg-primary/10 hover:text-primary transition-colors disabled:opacity-60"
+                >
+                  <Languages className="h-3.5 w-3.5" />
+                  {loading
+                    ? t("reviews.translating")
+                    : translated
+                      ? t("reviews.showOriginal")
+                      : t("reviews.translate")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => toggleLike(review.id)}
+                  aria-pressed={liked}
+                  aria-label={liked ? t("reviews.unlike") : t("reviews.like")}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+                    liked
+                      ? "bg-primary/10 text-primary"
+                      : "bg-secondary text-muted-foreground hover:text-primary hover:bg-primary/10"
+                  }`}
+                >
+                  <BookHeart
+                    className={`h-4 w-4 ${liked ? "fill-primary/20" : ""}`}
+                    strokeWidth={liked ? 2.5 : 2}
+                  />
+                  <span>{likeCount}</span>
+                </button>
+              </div>
+            </div>
             <div className="bg-secondary/40 rounded-xl p-5">
-              <p className="text-sm text-foreground leading-relaxed italic">"{review.fullComment}"</p>
+              <p className="text-sm text-foreground leading-relaxed italic">
+                "{translated ?? review.fullComment}"
+              </p>
               <p className="text-xs text-muted-foreground mt-3">— {review.userName}</p>
             </div>
           </div>
