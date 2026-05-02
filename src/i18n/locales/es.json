@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "language": "Idioma",
+    "library": "Biblioteca",
+    "myAccount": "Mi cuenta",
+    "myProfile": "Mi Perfil",
+    "myPublications": "Mis Publicaciones",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión",
+    "login": "Iniciar sesión",
+    "loginShort": "Entrar"
+  },
+  "reviews": {
+    "sortBy": "Ordenar por",
+    "mostRelevant": "Más relevantes",
+    "mostRecent": "Más recientes",
+    "mostPopular": "Más populares",
+    "averageOf": "{{value}} de media",
+    "reviewsCount": "{{count}} reseñas",
+    "viewDetail": "Ver detalle completo →",
+    "empty": "No hay reseñas disponibles para este programa todavía.",
+    "backToRecommendations": "Volver a recomendaciones",
+    "like": "Me gusta",
+    "unlike": "Quitar me gusta",
+    "translate": "Traducir comentario",
+    "translating": "Traduciendo…",
+    "showOriginal": "Ver original"
+  }
+}
