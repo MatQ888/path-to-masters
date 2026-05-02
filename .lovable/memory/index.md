@@ -15,3 +15,4 @@ Updated: just now
 - [Library & Comparator](mem://features/library-and-comparator) — Bookmarks on cards, /biblioteca page and side-by-side comparator (up to 4) with visual bars
 - [Recommendation Details](mem://features/recommendation-details) — 3-level navigation for master's selection and specific data blocks for reviews
 - [User Onboarding](mem://features/user-onboarding) — Registration flow, privacy policy modal, and post-registration routing
+- [Likes, Popular & i18n](mem://features/likes-popular-i18n) — BookHeart likes in localStorage, "Más populares" sort, react-i18next ES/EN, stub translation hook
