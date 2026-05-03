@@ -1,26 +1,44 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Rocket } from "lucide-react";
+import { Rocket, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import Navbar from "@/components/Navbar";
 
+type Genero = "masculino" | "femenino" | "no_indicar" | "";
+
 const Auth = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"login" | "signup">("login");
-
-  // Form state
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [apodo, setApodo] = useState("");
   const [loading, setLoading] = useState(false);
+  const [policyOpen, setPolicyOpen] = useState(false);
 
-  // Redirect if already authenticated
+  // Login state
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPwd, setLoginPwd] = useState("");
+
+  // Signup state
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [apodo, setApodo] = useState("");
+  const [genero, setGenero] = useState<Genero>("");
+  const [email, setEmail] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [password, setPassword] = useState("");
+  const [esEstudiante, setEsEstudiante] = useState<boolean | null>(null);
+  const [universidad, setUniversidad] = useState("");
+  const [carrera, setCarrera] = useState("");
+  const [acceptedPolicy, setAcceptedPolicy] = useState(false);
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) navigate("/", { replace: true });
@@ -31,10 +49,21 @@ const Auth = () => {
     return () => sub.subscription.unsubscribe();
   }, [navigate]);
 
+  const signupValid =
+    nombre.trim() &&
+    apellido.trim() &&
+    apodo.trim() &&
+    genero !== "" &&
+    email.trim() &&
+    password.trim().length >= 6 &&
+    esEstudiante !== null &&
+    (esEstudiante === false || (universidad.trim() && carrera.trim())) &&
+    acceptedPolicy;
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!apodo.trim()) {
-      toast.error("Elige un apodo");
+    if (!signupValid) {
+      toast.error("Completa todos los campos obligatorios");
       return;
     }
     setLoading(true);
@@ -43,7 +72,17 @@ const Auth = () => {
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/`,
-        data: { apodo: apodo.trim() },
+        data: {
+          apodo: apodo.trim(),
+          nombre: nombre.trim(),
+          apellido: apellido.trim(),
+          genero,
+          telefono: telefono.trim(),
+          es_estudiante: esEstudiante ? "true" : "false",
+          universidad: esEstudiante ? universidad.trim() : "",
+          carrera: esEstudiante ? carrera.trim() : "",
+          acepto_politica: "true",
+        },
       },
     });
     setLoading(false);
@@ -57,7 +96,7 @@ const Auth = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({ email: loginEmail, password: loginPwd });
     setLoading(false);
     if (error) {
       toast.error(error.message.includes("Invalid") ? "Email o contraseña incorrectos" : error.message);
@@ -80,11 +119,11 @@ const Auth = () => {
   };
 
   const handleForgot = async () => {
-    if (!email) {
+    if (!loginEmail) {
       toast.error("Introduce tu email primero");
       return;
     }
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await supabase.auth.resetPasswordForEmail(loginEmail, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     if (error) {
@@ -97,8 +136,8 @@ const Auth = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="pt-16 min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
-        <div className="w-full max-w-md bg-card border border-border rounded-2xl p-8 shadow-lg">
+      <div className="pt-20 pb-12 min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
+        <div className="w-full max-w-lg bg-card border border-border rounded-2xl p-8 shadow-lg">
           <div className="flex flex-col items-center mb-6">
             <div className="h-12 w-12 rounded-xl bg-primary text-primary-foreground inline-flex items-center justify-center mb-3">
               <Rocket className="h-6 w-6" />
@@ -117,11 +156,11 @@ const Auth = () => {
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email-l">Email</Label>
-                  <Input id="email-l" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <Input id="email-l" type="email" required value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="pwd-l">Contraseña</Label>
-                  <Input id="pwd-l" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                  <Input id="pwd-l" type="password" required value={loginPwd} onChange={(e) => setLoginPwd(e.target.value)} />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Entrando…" : "Iniciar sesión"}
@@ -137,20 +176,122 @@ const Auth = () => {
             </TabsContent>
 
             <TabsContent value="signup">
-              <form onSubmit={handleSignup} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="apodo-s">Apodo</Label>
-                  <Input id="apodo-s" required value={apodo} onChange={(e) => setApodo(e.target.value)} placeholder="Cómo aparecerás en la app" />
+              <form onSubmit={handleSignup} className="space-y-5">
+                <div className="space-y-4">
+                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Datos personales
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="nombre">Nombre</Label>
+                        <Input id="nombre" placeholder="Tu nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} maxLength={100} />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="apellido">Apellido</Label>
+                        <Input id="apellido" placeholder="Tus apellidos" value={apellido} onChange={(e) => setApellido(e.target.value)} maxLength={100} />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="apodo">Apodo</Label>
+                      <Input id="apodo" placeholder="Ej. juanperez95" value={apodo} onChange={(e) => setApodo(e.target.value)} maxLength={50} />
+                      <p className="text-xs text-muted-foreground leading-snug">
+                        Este apodo será el que se usará para publicar toda la información que se dará.
+                      </p>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="genero">Género</Label>
+                      <Select value={genero} onValueChange={(v) => setGenero(v as Genero)}>
+                        <SelectTrigger id="genero">
+                          <SelectValue placeholder="Selecciona una opción" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="masculino">Masculino</SelectItem>
+                          <SelectItem value="femenino">Femenino</SelectItem>
+                          <SelectItem value="no_indicar">Prefiero no indicarlo</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="email-s">Email</Label>
+                      <Input id="email-s" type="email" placeholder="tu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={255} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="telefono">Teléfono (opcional)</Label>
+                      <Input id="telefono" type="tel" placeholder="+34 600 000 000" value={telefono} onChange={(e) => setTelefono(e.target.value)} maxLength={20} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="pwd-s">Contraseña</Label>
+                      <Input id="pwd-s" type="password" placeholder="Mínimo 6 caracteres" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} maxLength={128} />
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email-s">Email</Label>
-                  <Input id="email-s" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+
+                <div className="space-y-4">
+                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Información académica
+                  </h3>
+                  <div className="space-y-2">
+                    <Label>¿Eres estudiante?</Label>
+                    <div className="flex gap-3">
+                      <Button
+                        type="button"
+                        variant={esEstudiante === true ? "default" : "outline"}
+                        className="flex-1"
+                        onClick={() => setEsEstudiante(true)}
+                      >
+                        Sí
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={esEstudiante === false ? "default" : "outline"}
+                        className="flex-1"
+                        onClick={() => setEsEstudiante(false)}
+                      >
+                        No
+                      </Button>
+                    </div>
+                  </div>
+
+                  {esEstudiante === true && (
+                    <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="universidad">Centro de estudios</Label>
+                        <Input id="universidad" placeholder="Nombre de tu universidad" value={universidad} onChange={(e) => setUniversidad(e.target.value)} maxLength={200} />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="carrera">Carrera/Grado</Label>
+                        <Input id="carrera" placeholder="Carrera que estudias" value={carrera} onChange={(e) => setCarrera(e.target.value)} maxLength={200} />
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="pwd-s">Contraseña</Label>
-                  <Input id="pwd-s" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+
+                <div className="flex items-center gap-2 text-xs text-muted-foreground bg-accent/50 rounded-lg p-3">
+                  <Shield className="h-4 w-4 shrink-0 text-primary" />
+                  <span>Tus datos son confidenciales y están protegidos.</span>
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+
+                <div className="flex items-start gap-3">
+                  <Checkbox
+                    id="policy"
+                    checked={acceptedPolicy}
+                    onCheckedChange={(checked) => setAcceptedPolicy(checked === true)}
+                    className="mt-0.5"
+                  />
+                  <label htmlFor="policy" className="text-sm text-muted-foreground leading-snug">
+                    He leído y acepto la{" "}
+                    <button
+                      type="button"
+                      className="text-primary underline hover:text-primary/80 font-medium"
+                      onClick={() => setPolicyOpen(true)}
+                    >
+                      Política de Privacidad
+                    </button>
+                  </label>
+                </div>
+
+                <Button type="submit" className="w-full" disabled={loading || !signupValid}>
                   {loading ? "Creando…" : "Crear cuenta"}
                 </Button>
               </form>
@@ -181,6 +322,61 @@ const Auth = () => {
           </p>
         </div>
       </div>
+
+      {/* Política de Privacidad */}
+      <Dialog open={policyOpen} onOpenChange={setPolicyOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] p-0">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle className="text-xl font-bold">Política de Privacidad</DialogTitle>
+            <DialogDescription>Lee detenidamente antes de aceptar</DialogDescription>
+          </DialogHeader>
+          <ScrollArea className="h-[60vh] px-6 pb-6">
+            <div className="space-y-4 text-sm text-muted-foreground leading-relaxed pr-4">
+              <p>
+                La presente Política de Privacidad establece los términos en que <strong className="text-foreground">Futureyou</strong> usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Estamos comprometidos con la seguridad de los datos de nuestros usuarios.
+              </p>
+
+              <h3 className="text-base font-semibold text-foreground">1. Información que es recogida</h3>
+              <p>Nuestro sitio web podrá recoger información personal como:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li><strong className="text-foreground">Identificación:</strong> Nombre completo.</li>
+                <li><strong className="text-foreground">Información de contacto:</strong> Correo electrónico y número de teléfono.</li>
+                <li><strong className="text-foreground">Datos académicos:</strong> Institución o lugar de estudio.</li>
+                <li><strong className="text-foreground">Seguridad:</strong> Contraseña (la cual será encriptada mediante algoritmos de hashing para su protección).</li>
+              </ul>
+
+              <h3 className="text-base font-semibold text-foreground">2. Uso de la información recogida</h3>
+              <p>Futureyou emplea la información con el fin de proporcionar el mejor servicio posible, particularmente para:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Mantener un registro de usuarios y perfiles personalizados.</li>
+                <li>Procesar y personalizar las recomendaciones de mercado basadas en el perfil académico y las respuestas del usuario.</li>
+                <li>Enviar notificaciones sobre actualizaciones del servicio o información relevante solicitada por el usuario.</li>
+                <li>Garantizar el acceso seguro a la plataforma mediante la verificación de credenciales.</li>
+              </ul>
+
+              <h3 className="text-base font-semibold text-foreground">3. Seguridad de los datos</h3>
+              <p>Futureyou está altamente comprometido para cumplir con el compromiso de mantener su información segura. Usamos los protocolos de seguridad web más actuales y estándares de encriptación avanzados para asegurarnos que no exista ningún acceso no autorizado.</p>
+              <p className="italic">Nota sobre la seguridad: Su contraseña se almacena de forma irreversible; ningún administrador de este sitio tiene acceso a su contraseña en texto plano.</p>
+
+              <h3 className="text-base font-semibold text-foreground">4. Control de su información personal</h3>
+              <p>En cualquier momento usted puede restringir la recopilación o el uso de la información personal que es proporcionada a nuestro sitio web.</p>
+              <p>Usted tiene derecho a solicitar el acceso, rectificación o eliminación definitiva de sus datos de nuestra base de datos.</p>
+              <p>Esta compañía no venderá, cederá ni distribuirá la información personal que es recopilada sin su consentimiento explícito, salvo que sea requerido por una autoridad judicial mediante una orden legal.</p>
+
+              <h3 className="text-base font-semibold text-foreground">5. Enlaces a Terceros</h3>
+              <p>Este sitio web pudiera contener enlaces a otros sitios de interés. Una vez que usted haga clic en estos enlaces y abandone nuestra página, Futureyou deja de tener control sobre el sitio al que es redirigido. Por lo tanto, no somos responsables de los términos de privacidad ni de la protección de sus datos en esos otros sitios terceros.</p>
+
+              <h3 className="text-base font-semibold text-foreground">6. Actualización de la Política</h3>
+              <p>Nos reservamos el derecho de cambiar los términos de la presente Política de Privacidad en cualquier momento para adaptarla a novedades legislativas, jurisprudenciales o prácticas del mercado.</p>
+
+              <p className="pt-2 text-xs border-t border-border mt-4">
+                <strong className="text-foreground">Futureyou</strong><br />
+                Última actualización: 12/04/2026
+              </p>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
