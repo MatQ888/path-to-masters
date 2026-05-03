@@ -16,27 +16,48 @@ export type Database = {
     Tables: {
       profiles: {
         Row: {
+          acepto_politica: boolean
+          acepto_politica_at: string | null
+          apellido: string | null
           apodo: string
           avatar_url: string | null
+          carrera: string | null
           created_at: string
+          es_estudiante: boolean | null
+          genero: string | null
           id: string
           nombre: string | null
+          universidad: string | null
           updated_at: string
         }
         Insert: {
+          acepto_politica?: boolean
+          acepto_politica_at?: string | null
+          apellido?: string | null
           apodo: string
           avatar_url?: string | null
+          carrera?: string | null
           created_at?: string
+          es_estudiante?: boolean | null
+          genero?: string | null
           id: string
           nombre?: string | null
+          universidad?: string | null
           updated_at?: string
         }
         Update: {
+          acepto_politica?: boolean
+          acepto_politica_at?: string | null
+          apellido?: string | null
           apodo?: string
           avatar_url?: string | null
+          carrera?: string | null
           created_at?: string
+          es_estudiante?: boolean | null
+          genero?: string | null
           id?: string
           nombre?: string | null
+          universidad?: string | null
           updated_at?: string
         }
         Relationships: []
