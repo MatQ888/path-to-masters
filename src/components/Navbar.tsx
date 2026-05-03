@@ -1,7 +1,7 @@
 import { Home, Globe, Library, User, LogOut, FileText, Settings, LogIn, Check } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useCurrentUser, setCurrentUser } from "@/hooks/useCurrentUser";
+import { useCurrentUser, signOut } from "@/hooks/useCurrentUser";
 import { useLibrary } from "@/hooks/useLibrary";
 import { setSessionStarted } from "@/hooks/useSessionStarted";
 import {
@@ -25,8 +25,8 @@ const Navbar = () => {
     navigate("/");
   };
 
-  const handleLogout = () => {
-    setCurrentUser(null);
+  const handleLogout = async () => {
+    await signOut();
     navigate("/");
   };
 
