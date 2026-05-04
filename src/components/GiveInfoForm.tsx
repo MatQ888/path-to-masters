@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import { tCountryByCode, tCcaaByCode, tProvince, tSpecialty, tFormat, tQuestionnaireOption } from "@/lib/i18nData";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -112,6 +114,7 @@ const initialForm: FormState = {
 };
 
 const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
+  const { t, i18n } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [form, setForm] = useState<FormState>(initialForm);
@@ -121,8 +124,9 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
 
   // Country / location options
   const countryOptions: ComboboxOption[] = useMemo(
-    () => COUNTRIES.map((c) => ({ value: c.code, label: c.name })),
-    [],
+    () => COUNTRIES.map((c) => ({ value: c.code, label: tCountryByCode(c.code) }))
+      .sort((a, b) => a.label.localeCompare(b.label, i18n.language)),
+    [i18n.language],
   );
 
   // City/province options depend on country
@@ -131,11 +135,11 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
     if (form.pais === "ES") {
       const provinces = form.ccaa ? getProvincesByCCAA(form.ccaa) : PROVINCES;
       return provinces
-        .map((p) => ({ value: p.name, label: p.name }))
-        .sort((a, b) => a.label.localeCompare(b.label, "es"));
+        .map((p) => ({ value: p.name, label: tProvince(p.name) }))
+        .sort((a, b) => a.label.localeCompare(b.label, i18n.language));
     }
     return getCitiesByCountry(form.pais).map((c) => ({ value: c, label: c }));
-  }, [form.pais, form.ccaa]);
+  }, [form.pais, form.ccaa, i18n.language]);
 
   // Entity (university/centre) options filtered by country
   const entityOptions: ComboboxOption[] = useMemo(() => {
@@ -150,8 +154,8 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
   }, [form.pais]);
 
   const ccaaOptions: ComboboxOption[] = useMemo(
-    () => CCAA.map((c) => ({ value: c.code, label: c.name })),
-    [],
+    () => CCAA.map((c) => ({ value: c.code, label: tCcaaByCode(c.code) })),
+    [i18n.language],
   );
 
   // Work experience handlers
@@ -199,7 +203,7 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
   // ===== THANK-YOU SCREEN (FIXED) =====
   if (submitted) {
     const fechaTexto = form.publishedAt
-      ? new Date(form.publishedAt).toLocaleDateString("es-ES", {
+      ? new Date(form.publishedAt).toLocaleDateString(i18n.language, {
           day: "2-digit",
           month: "long",
           year: "numeric",
@@ -213,16 +217,14 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
             <CheckCircle className="h-10 w-10 text-primary" />
           </div>
           <h2 className="text-3xl font-bold text-foreground">
-            {isUpdate ? "¡Información actualizada!" : "¡Gracias por contribuir!"}
+            {isUpdate ? t("giveForm.thankYou.titleUpdate") : t("giveForm.thankYou.titleNew")}
           </h2>
           <p className="text-muted-foreground text-base">
-            {isUpdate
-              ? "Tus cambios se han guardado correctamente."
-              : "Tu información ha sido publicada correctamente."}
+            {isUpdate ? t("giveForm.thankYou.messageUpdate") : t("giveForm.thankYou.messageNew")}
           </p>
           {apodo && (
             <p className="text-sm text-muted-foreground">
-              Publicado bajo el apodo{" "}
+              {t("giveForm.thankYou.publishedAs")}{" "}
               <span className="font-semibold text-foreground">@{apodo}</span>
               {fechaTexto && <> · {fechaTexto}</>}
             </p>
@@ -235,7 +237,7 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
               onClick={handleUpdate}
               className="rounded-xl gap-2"
             >
-              <RefreshCcw className="h-4 w-4" /> Actualizar información
+              <RefreshCcw className="h-4 w-4" /> {t("giveForm.thankYou.update")}
             </Button>
             <Button
               type="button"
@@ -243,7 +245,7 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
               onClick={onBack}
               className="rounded-xl gap-2 text-primary-foreground"
             >
-              Volver al inicio
+              {t("giveForm.thankYou.back")}
             </Button>
           </div>
         </div>
@@ -258,16 +260,16 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
           onClick={onBack}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" /> Volver
+          <ArrowLeft className="h-4 w-4" /> {t("common.back")}
         </button>
 
         {/* Header */}
         <div className="text-center space-y-2 mb-6">
           <h2 className="text-3xl font-bold text-foreground">
-            Compartir información
+            {t("giveForm.title")}
           </h2>
           <p className="text-muted-foreground">
-            Ayuda a otros usuarios compartiendo tu experiencia académica o profesional.
+            {t("giveForm.subtitle")}
           </p>
         </div>
 
@@ -276,7 +278,7 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
           <div className="flex items-center gap-3 p-4 rounded-2xl bg-accent/60 border border-border mb-4">
             <AtSign className="h-5 w-5 text-primary shrink-0" />
             <p className="text-sm text-foreground">
-              Toda la información que proporciones se publicará bajo tu apodo{" "}
+              {t("giveForm.apodoNotice")}{" "}
               <span className="font-semibold">@{apodo}</span>.
             </p>
           </div>
@@ -286,8 +288,7 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
         <div className="flex items-center gap-3 p-4 rounded-2xl bg-secondary/60 border border-border mb-8">
           <Shield className="h-5 w-5 text-muted-foreground shrink-0" />
           <p className="text-sm text-muted-foreground">
-            Tus datos personales son confidenciales. Solo se publica la información
-            del programa o experiencia bajo tu apodo.
+            {t("giveForm.anonymity")}
           </p>
         </div>
 
