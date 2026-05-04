@@ -273,7 +273,7 @@ const ReviewDetail = ({ review, masterName, centerName, onBack }: ReviewDetailPr
                 <button
                   type="button"
                   onClick={() =>
-                    translated ? clear(review.id) : void translate(review.id, review.fullComment)
+                    translated ? clear(review.id) : void translate(review.id, baseComment)
                   }
                   disabled={loading}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary text-xs font-medium text-foreground hover:bg-primary/10 hover:text-primary transition-colors disabled:opacity-60"
