@@ -294,26 +294,25 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* ---------- LOCALIZACIÓN ---------- */}
-          <SectionTitle>Localización</SectionTitle>
+          <SectionTitle>{t("giveForm.sections.location")}</SectionTitle>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FieldWrapper label="País">
+            <FieldWrapper label={t("giveForm.labels.country")}>
               <SearchableCombobox
                 options={countryOptions}
                 value={form.pais}
                 onChange={(v) => {
                   update("pais", v);
-                  // Reset dependent fields
                   update("ciudad", "");
                   update("ccaa", "");
                   update("centro", "");
                 }}
-                placeholder="Selecciona un país"
-                emptyMessage="País no encontrado"
+                placeholder={t("giveForm.placeholders.country")}
+                emptyMessage={t("common.noResults")}
               />
             </FieldWrapper>
 
             {form.pais === "ES" && (
-              <FieldWrapper label="Comunidad Autónoma">
+              <FieldWrapper label={t("giveForm.labels.ccaa")}>
                 <SearchableCombobox
                   options={ccaaOptions}
                   value={form.ccaa}
@@ -321,14 +320,14 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
                     update("ccaa", v);
                     update("ciudad", "");
                   }}
-                  placeholder="Selecciona una CC.AA."
+                  placeholder={t("giveForm.placeholders.ccaa")}
                 />
               </FieldWrapper>
             )}
 
             <FieldWrapper
-              label={form.pais === "ES" ? "Provincia" : "Ciudad"}
-              hint={!form.pais ? "Elige primero un país" : undefined}
+              label={form.pais === "ES" ? t("giveForm.labels.province") : t("giveForm.labels.city")}
+              hint={!form.pais ? t("giveForm.hints.pickCountryFirst") : undefined}
             >
               <SearchableCombobox
                 options={cityOptions}
@@ -336,32 +335,32 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
                 onChange={(v) => update("ciudad", v)}
                 placeholder={
                   form.pais === "ES"
-                    ? "Selecciona provincia"
-                    : "Escribe la ciudad"
+                    ? t("giveForm.placeholders.province")
+                    : t("giveForm.placeholders.city")
                 }
                 disabled={!form.pais}
                 allowCustom={form.pais !== "ES"}
-                emptyMessage="Sin resultados"
+                emptyMessage={t("common.noResults")}
               />
             </FieldWrapper>
           </div>
 
           {/* ---------- ENTIDAD Y PROGRAMA ---------- */}
-          <SectionTitle>Entidad y programa</SectionTitle>
-          <FieldWrapper label="Universidad, centro de máster o empresa">
+          <SectionTitle>{t("giveForm.sections.entity")}</SectionTitle>
+          <FieldWrapper label={t("giveForm.labels.entity")}>
             <SearchableCombobox
               options={entityOptions}
               value={form.centro}
               onChange={(v) => update("centro", v)}
-              placeholder="Busca por nombre o siglas (ej. UPM, Carlos III)"
-              emptyMessage="Sin resultados"
+              placeholder={t("giveForm.placeholders.entity")}
+              emptyMessage={t("common.noResults")}
               allowCustom
             />
           </FieldWrapper>
 
-          <FieldWrapper label="Grado, máster o puesto">
+          <FieldWrapper label={t("giveForm.labels.program")}>
             <Input
-              placeholder="Ej: Ingeniería Aeroespacial / Data Analyst"
+              placeholder={t("giveForm.placeholders.program")}
               value={form.programa}
               onChange={(e) => update("programa", e.target.value)}
               maxLength={200}
@@ -369,54 +368,54 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
           </FieldWrapper>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FieldWrapper label="Especialidad">
+            <FieldWrapper label={t("giveForm.labels.specialty")}>
               <Select
                 value={form.especialidad}
                 onValueChange={(v) => update("especialidad", v)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecciona una especialidad" />
+                  <SelectValue placeholder={t("giveForm.placeholders.specialty")} />
                 </SelectTrigger>
                 <SelectContent>
                   {especialidades.map((e) => (
-                    <SelectItem key={e} value={e}>{e}</SelectItem>
+                    <SelectItem key={e} value={e}>{tSpecialty(e)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </FieldWrapper>
 
-            <FieldWrapper label="Sector">
+            <FieldWrapper label={t("giveForm.labels.sector")}>
               <Select value={form.sector} onValueChange={(v) => update("sector", v)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Público / Privado" />
+                  <SelectValue placeholder={t("giveForm.placeholders.sector")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Público">Público</SelectItem>
-                  <SelectItem value="Privado">Privado</SelectItem>
+                  <SelectItem value="Público">{tQuestionnaireOption("Público")}</SelectItem>
+                  <SelectItem value="Privado">{tQuestionnaireOption("Privado")}</SelectItem>
                 </SelectContent>
               </Select>
             </FieldWrapper>
           </div>
 
-          <FieldWrapper label="¿En qué formato se imparte?">
+          <FieldWrapper label={t("giveForm.labels.format")}>
             <Select value={form.formato} onValueChange={(v) => update("formato", v)}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecciona un formato" />
+                <SelectValue placeholder={t("giveForm.placeholders.format")} />
               </SelectTrigger>
               <SelectContent>
                 {formatos.map((f) => (
-                  <SelectItem key={f} value={f}>{f}</SelectItem>
+                  <SelectItem key={f} value={f}>{tFormat(f)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </FieldWrapper>
 
           <FieldWrapper
-            label="Requisitos o nota de corte"
-            hint="Si es universidad, pon la nota de corte. Si es máster o empresa, describe brevemente el proceso (ej. Entrevista + Inglés B2)."
+            label={t("giveForm.labels.requirements")}
+            hint={t("giveForm.hints.requirements")}
           >
             <Textarea
-              placeholder="Ej: 12.5 / Entrevista + Portfolio"
+              placeholder={t("giveForm.placeholders.requirements")}
               value={form.requisitos}
               onChange={(e) => update("requisitos", e.target.value)}
               maxLength={500}
@@ -426,36 +425,36 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
           </FieldWrapper>
 
           {/* ---------- VALORACIÓN ---------- */}
-          <SectionTitle>Valoración</SectionTitle>
+          <SectionTitle>{t("giveForm.sections.rating")}</SectionTitle>
 
-          <FieldWrapper label="¿Qué nivel de abandono percibes?">
+          <FieldWrapper label={t("giveForm.labels.dropout")}>
             <ChipGroup
-              items={abandonoLevels}
+              items={t("giveForm.dropoutLevels", { returnObjects: true }) as string[]}
               selected={form.abandono}
               onSelect={(i) => update("abandono", i)}
             />
           </FieldWrapper>
 
-          <FieldWrapper label="¿Cómo ves la salida laboral?">
+          <FieldWrapper label={t("giveForm.labels.employability")}>
             <ChipGroup
-              items={empleabilidadLevels}
+              items={t("giveForm.employabilityLevels", { returnObjects: true }) as string[]}
               selected={form.empleabilidad}
               onSelect={(i) => update("empleabilidad", i)}
             />
           </FieldWrapper>
 
-          <FieldWrapper label="Precio o inversión anual aproximada (€)">
+          <FieldWrapper label={t("giveForm.labels.investment")}>
             <Input
               type="number"
-              placeholder="Ej: 8000"
+              placeholder={t("giveForm.placeholders.investment")}
               value={form.inversion}
               onChange={(e) => update("inversion", e.target.value)}
             />
           </FieldWrapper>
 
-          <FieldWrapper label="Nivel de estrés">
+          <FieldWrapper label={t("giveForm.labels.stress")}>
             <div className="flex justify-between gap-2">
-              {stressLevels.map((level, i) => (
+              {(t("giveForm.stressLevels", { returnObjects: true }) as string[]).map((label, i) => (
                 <button
                   key={i}
                   type="button"
@@ -466,9 +465,9 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
                       : "bg-background border-border text-foreground hover:bg-accent"
                   }`}
                 >
-                  <span className="text-2xl">{level.emoji}</span>
+                  <span className="text-2xl">{stressLevels[i].emoji}</span>
                   <span className="text-[10px] leading-tight text-center font-medium">
-                    {level.label}
+                    {label}
                   </span>
                 </button>
               ))}
@@ -476,10 +475,9 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
           </FieldWrapper>
 
           {/* ---------- EXPERIENCIA LABORAL ---------- */}
-          <SectionTitle>Experiencia laboral</SectionTitle>
+          <SectionTitle>{t("giveForm.sections.experience")}</SectionTitle>
           <p className="text-sm text-muted-foreground -mt-4">
-            Añade empresas u ofertas en las que has trabajado. Esto nos ayudará a
-            construir el comparador de salidas profesionales.
+            {t("giveForm.experience.intro")}
           </p>
 
           <div className="space-y-3">
@@ -487,7 +485,7 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
               <div className="rounded-2xl border border-dashed border-border bg-muted/20 p-6 text-center">
                 <Building2 className="h-6 w-6 text-muted-foreground mx-auto mb-2" />
                 <p className="text-sm text-muted-foreground">
-                  Aún no has añadido ninguna experiencia laboral.
+                  {t("giveForm.experience.empty")}
                 </p>
               </div>
             )}
@@ -499,41 +497,35 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Experiencia #{idx + 1}
+                    {t("giveForm.experience.item", { n: idx + 1 })}
                   </span>
                   <button
                     type="button"
                     onClick={() => removeExperience(exp.id)}
                     className="text-muted-foreground hover:text-destructive transition-colors"
-                    aria-label="Eliminar experiencia"
+                    aria-label={t("giveForm.experience.remove")}
                   >
                     <X className="h-4 w-4" />
                   </button>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Input
-                    placeholder="Empresa"
+                    placeholder={t("giveForm.placeholders.company")}
                     value={exp.empresa}
-                    onChange={(e) =>
-                      updateExperience(exp.id, "empresa", e.target.value)
-                    }
+                    onChange={(e) => updateExperience(exp.id, "empresa", e.target.value)}
                     maxLength={200}
                   />
                   <Input
-                    placeholder="Puesto / Rol"
+                    placeholder={t("giveForm.placeholders.role")}
                     value={exp.puesto}
-                    onChange={(e) =>
-                      updateExperience(exp.id, "puesto", e.target.value)
-                    }
+                    onChange={(e) => updateExperience(exp.id, "puesto", e.target.value)}
                     maxLength={200}
                   />
                 </div>
                 <Input
-                  placeholder="Periodo (ej. 2021-2023 o 1 año)"
+                  placeholder={t("giveForm.placeholders.period")}
                   value={exp.anios ?? ""}
-                  onChange={(e) =>
-                    updateExperience(exp.id, "anios", e.target.value)
-                  }
+                  onChange={(e) => updateExperience(exp.id, "anios", e.target.value)}
                   maxLength={50}
                 />
               </div>
@@ -545,15 +537,15 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
               onClick={addExperience}
               className="w-full rounded-xl gap-2"
             >
-              <Plus className="h-4 w-4" /> Añadir experiencia laboral
+              <Plus className="h-4 w-4" /> {t("giveForm.experience.add")}
             </Button>
           </div>
 
           {/* ---------- COMENTARIOS ---------- */}
-          <SectionTitle>Comentario para otros usuarios</SectionTitle>
-          <FieldWrapper label="Información clave">
+          <SectionTitle>{t("giveForm.sections.comment")}</SectionTitle>
+          <FieldWrapper label={t("giveForm.labels.keyInfo")}>
             <Textarea
-              placeholder="Cuéntanos sobre la calidad de los profesores, si es muy teórico o práctico, y si los contactos que haces valen la pena"
+              placeholder={t("giveForm.placeholders.comment")}
               value={form.comentarios}
               onChange={(e) => update("comentarios", e.target.value)}
               maxLength={2000}
@@ -571,7 +563,7 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
               size="lg"
               className="flex-1 rounded-xl bg-primary hover:bg-primary/90 font-semibold gap-2"
             >
-              <Save className="h-4 w-4" /> Enviar información
+              <Save className="h-4 w-4" /> {t("giveForm.submit")}
             </Button>
           </div>
         </form>
