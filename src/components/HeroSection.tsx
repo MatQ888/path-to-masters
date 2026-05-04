@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 import heroImage from "@/assets/hero-illustration.png";
 
 interface HeroSectionProps {
@@ -6,6 +7,7 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ onStart }: HeroSectionProps) => {
+  const { t } = useTranslation();
   return (
     <section className="hero-gradient min-h-[calc(100vh-4rem)] flex items-center relative overflow-hidden">
       <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -15,14 +17,14 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
       <div className="container mx-auto px-4 py-16 relative z-10">
         <div className="flex flex-col items-center text-center space-y-8 max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight">
-            Buscamos facilitar la elección de tu futuro profesional
+            {t("hero.title")}
           </h1>
           <p className="text-lg md:text-xl text-primary-foreground/80 max-w-xl">
-            Te recomendamos másteres personalizados según tu perfil, presupuesto y objetivos profesionales. Descubre el camino que mejor se adapta a ti.
+            {t("hero.subtitle")}
           </p>
           <img
             src={heroImage}
-            alt="Estudiante frente a dos caminos: dar u obtener información"
+            alt={t("hero.imageAlt")}
             className="w-full max-w-md drop-shadow-lg"
           />
           <Button
@@ -31,7 +33,7 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
             className="text-lg px-12 py-6 rounded-xl"
             onClick={onStart}
           >
-            Comenzar
+            {t("hero.start")}
           </Button>
         </div>
       </div>

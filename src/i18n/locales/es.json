@@ -23,6 +23,9 @@
     "backHome": "← Volver al inicio"
   },
   "hero": {
+    "title": "Buscamos facilitar la elección de tu futuro profesional",
+    "subtitle": "Te recomendamos másteres personalizados según tu perfil, presupuesto y objetivos profesionales. Descubre el camino que mejor se adapta a ti.",
+    "imageAlt": "Estudiante frente a dos caminos: dar u obtener información",
     "start": "Comenzar"
   },
   "actionSelection": {

@@ -23,6 +23,9 @@
     "backHome": "← Back to home"
   },
   "hero": {
+    "title": "We help you choose your professional future",
+    "subtitle": "We recommend personalized master's based on your profile, budget and professional goals. Find the path that best fits you.",
+    "imageAlt": "Student facing two paths: give or get information",
     "start": "Get started"
   },
   "actionSelection": {

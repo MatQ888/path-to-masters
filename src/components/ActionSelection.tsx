@@ -1,18 +1,20 @@
 import { ArrowUpFromLine, ArrowDownToLine } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ActionSelectionProps {
   onSelect: (action: "give" | "get") => void;
 }
 
 const ActionSelection = ({ onSelect }: ActionSelectionProps) => {
+  const { t } = useTranslation();
   return (
     <section className="min-h-screen flex items-center bg-background py-20">
       <div className="container mx-auto px-4 max-w-2xl">
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            ¿Qué te gustaría hacer?
+            {t("actionSelection.title")}
           </h2>
-          <p className="text-muted-foreground text-lg">Elige una opción para continuar</p>
+          <p className="text-muted-foreground text-lg">{t("actionSelection.subtitle")}</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -23,9 +25,9 @@ const ActionSelection = ({ onSelect }: ActionSelectionProps) => {
             <div className="w-14 h-14 rounded-xl bg-accent flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
               <ArrowUpFromLine className="h-7 w-7" />
             </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">Dar información</h3>
+            <h3 className="text-xl font-semibold text-foreground mb-2">{t("actionSelection.give.title")}</h3>
             <p className="text-muted-foreground text-sm">
-              Comparte datos sobre tu centro de estudios para ayudar a otros estudiantes.
+              {t("actionSelection.give.description")}
             </p>
           </button>
 
@@ -36,12 +38,12 @@ const ActionSelection = ({ onSelect }: ActionSelectionProps) => {
             <div className="w-14 h-14 rounded-xl bg-primary flex items-center justify-center mb-6 text-primary-foreground">
               <ArrowDownToLine className="h-7 w-7" />
             </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">Obtener información</h3>
+            <h3 className="text-xl font-semibold text-foreground mb-2">{t("actionSelection.get.title")}</h3>
             <p className="text-muted-foreground text-sm">
-              Recibe recomendaciones de másteres personalizados según tu perfil.
+              {t("actionSelection.get.description")}
             </p>
             <span className="inline-block mt-3 text-xs font-medium text-primary bg-accent px-3 py-1 rounded-full">
-              Recomendado
+              {t("actionSelection.get.recommended")}
             </span>
           </button>
         </div>
