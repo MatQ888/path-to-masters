@@ -27,6 +27,10 @@ export interface Review {
     debilidades: string[];
     oportunidades: string[];
   };
+  /** Traducciones precargadas del comentario completo (clave = código de idioma). */
+  translations?: {
+    en?: { fullComment?: string; summary?: string };
+  };
 }
 
 export const mockReviewsByMaster: Record<string, Review[]> = {

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { MapPin, Euro, Building2, ArrowLeft, Clock } from "lucide-react";
 import { mockReviewsByMaster, Review } from "@/data/mockReviews";
@@ -6,6 +7,7 @@ import { getCentersForMaster, MasterCenter } from "@/data/mockCenters";
 import CentersListing from "@/components/CentersListing";
 import ReviewsListing from "@/components/ReviewsListing";
 import ReviewDetail from "@/components/ReviewDetail";
+import { tQuestionnaireOption } from "@/lib/i18nData";
 
 interface ResultsProps {
   answers: Record<string, string>;
@@ -24,6 +26,7 @@ const mockMasters = [
 type View = "list" | "centers" | "reviews" | "detail";
 
 const Results = ({ answers, onBack }: ResultsProps) => {
+  const { t } = useTranslation();
   const [view, setView] = useState<View>("list");
   const [selectedMasterName, setSelectedMasterName] = useState<string>("");
   const [selectedCenter, setSelectedCenter] = useState<MasterCenter | null>(null);
@@ -105,13 +108,13 @@ const Results = ({ answers, onBack }: ResultsProps) => {
     <section className="min-h-screen bg-secondary/50 py-20">
       <div className="container mx-auto px-4 max-w-3xl">
         <button onClick={onBack} className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors">
-          <ArrowLeft className="h-4 w-4" /> Volver
+          <ArrowLeft className="h-4 w-4" /> {t("common.back")}
         </button>
 
         <div className="text-center space-y-3 mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground">Tus recomendaciones</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground">{t("results.title")}</h2>
           <p className="text-muted-foreground text-lg">
-            Basadas en tu perfil: {answers.presupuesto} · {answers.lugar} · {answers.sector}
+            {t("results.subtitleBase")} {answers.presupuesto} · {tQuestionnaireOption(answers.lugar || "")} · {tQuestionnaireOption(answers.sector || "")}
           </p>
         </div>
 
@@ -133,7 +136,7 @@ const Results = ({ answers, onBack }: ResultsProps) => {
                   className="rounded-xl shrink-0"
                   onClick={() => handleViewMore(master.name, master)}
                 >
-                  Ver más
+                  {t("results.viewMore")}
                 </Button>
               </div>
             </div>
@@ -141,8 +144,8 @@ const Results = ({ answers, onBack }: ResultsProps) => {
         </div>
 
         <div className="text-center mt-12">
-          <p className="text-sm text-muted-foreground mb-4">¿No encuentras lo que buscas?</p>
-          <Button variant="outline" onClick={onBack}>Repetir cuestionario</Button>
+          <p className="text-sm text-muted-foreground mb-4">{t("results.notFound")}</p>
+          <Button variant="outline" onClick={onBack}>{t("results.repeatQuestionnaire")}</Button>
         </div>
       </div>
     </section>

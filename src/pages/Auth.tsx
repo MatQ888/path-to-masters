@@ -12,11 +12,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import { useTranslation } from "react-i18next";
 import Navbar from "@/components/Navbar";
 
 type Genero = "masculino" | "femenino" | "no_indicar" | "";
 
 const Auth = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [loading, setLoading] = useState(false);
@@ -142,35 +144,35 @@ const Auth = () => {
             <div className="h-12 w-12 rounded-xl bg-primary text-primary-foreground inline-flex items-center justify-center mb-3">
               <Rocket className="h-6 w-6" />
             </div>
-            <h1 className="text-2xl font-bold">Futureyou</h1>
-            <p className="text-sm text-muted-foreground">Accede a tu cuenta</p>
+            <h1 className="text-2xl font-bold">{t("auth.title")}</h1>
+            <p className="text-sm text-muted-foreground">{t("auth.subtitle")}</p>
           </div>
 
           <Tabs value={mode} onValueChange={(v) => setMode(v as "login" | "signup")} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
-              <TabsTrigger value="signup">Crear cuenta</TabsTrigger>
+              <TabsTrigger value="login">{t("auth.tabLogin")}</TabsTrigger>
+              <TabsTrigger value="signup">{t("auth.tabSignup")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email-l">Email</Label>
+                  <Label htmlFor="email-l">{t("auth.email")}</Label>
                   <Input id="email-l" type="email" required value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="pwd-l">Contraseña</Label>
+                  <Label htmlFor="pwd-l">{t("auth.password")}</Label>
                   <Input id="pwd-l" type="password" required value={loginPwd} onChange={(e) => setLoginPwd(e.target.value)} />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Entrando…" : "Iniciar sesión"}
+                  {loading ? t("auth.loggingIn") : t("auth.loginBtn")}
                 </Button>
                 <button
                   type="button"
                   onClick={handleForgot}
                   className="text-xs text-muted-foreground hover:text-primary block mx-auto"
                 >
-                  ¿Has olvidado tu contraseña?
+                  {t("auth.forgot")}
                 </button>
               </form>
             </TabsContent>
@@ -179,60 +181,60 @@ const Auth = () => {
               <form onSubmit={handleSignup} className="space-y-5">
                 <div className="space-y-4">
                   <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Datos personales
+                    {t("auth.personalData")}
                   </h3>
                   <div className="space-y-3">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
-                        <Label htmlFor="nombre">Nombre</Label>
-                        <Input id="nombre" placeholder="Tu nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} maxLength={100} />
+                        <Label htmlFor="nombre">{t("auth.name")}</Label>
+                        <Input id="nombre" placeholder={t("auth.namePh")} value={nombre} onChange={(e) => setNombre(e.target.value)} maxLength={100} />
                       </div>
                       <div className="space-y-1.5">
-                        <Label htmlFor="apellido">Apellido</Label>
-                        <Input id="apellido" placeholder="Tus apellidos" value={apellido} onChange={(e) => setApellido(e.target.value)} maxLength={100} />
+                        <Label htmlFor="apellido">{t("auth.lastName")}</Label>
+                        <Input id="apellido" placeholder={t("auth.lastNamePh")} value={apellido} onChange={(e) => setApellido(e.target.value)} maxLength={100} />
                       </div>
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="apodo">Apodo</Label>
-                      <Input id="apodo" placeholder="Ej. juanperez95" value={apodo} onChange={(e) => setApodo(e.target.value)} maxLength={50} />
+                      <Label htmlFor="apodo">{t("auth.nickname")}</Label>
+                      <Input id="apodo" placeholder={t("auth.nicknamePh")} value={apodo} onChange={(e) => setApodo(e.target.value)} maxLength={50} />
                       <p className="text-xs text-muted-foreground leading-snug">
-                        Este apodo será el que se usará para publicar toda la información que se dará.
+                        {t("auth.nicknameHint")}
                       </p>
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="genero">Género</Label>
+                      <Label htmlFor="genero">{t("auth.gender")}</Label>
                       <Select value={genero} onValueChange={(v) => setGenero(v as Genero)}>
                         <SelectTrigger id="genero">
-                          <SelectValue placeholder="Selecciona una opción" />
+                          <SelectValue placeholder={t("auth.genderPh")} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="masculino">Masculino</SelectItem>
-                          <SelectItem value="femenino">Femenino</SelectItem>
-                          <SelectItem value="no_indicar">Prefiero no indicarlo</SelectItem>
+                          <SelectItem value="masculino">{t("auth.male")}</SelectItem>
+                          <SelectItem value="femenino">{t("auth.female")}</SelectItem>
+                          <SelectItem value="no_indicar">{t("auth.preferNot")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="email-s">Email</Label>
-                      <Input id="email-s" type="email" placeholder="tu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={255} />
+                      <Label htmlFor="email-s">{t("auth.email")}</Label>
+                      <Input id="email-s" type="email" placeholder={t("auth.emailPh")} value={email} onChange={(e) => setEmail(e.target.value)} maxLength={255} />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="telefono">Teléfono (opcional)</Label>
-                      <Input id="telefono" type="tel" placeholder="+34 600 000 000" value={telefono} onChange={(e) => setTelefono(e.target.value)} maxLength={20} />
+                      <Label htmlFor="telefono">{t("auth.phone")}</Label>
+                      <Input id="telefono" type="tel" placeholder={t("auth.phonePh")} value={telefono} onChange={(e) => setTelefono(e.target.value)} maxLength={20} />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="pwd-s">Contraseña</Label>
-                      <Input id="pwd-s" type="password" placeholder="Mínimo 6 caracteres" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} maxLength={128} />
+                      <Label htmlFor="pwd-s">{t("auth.password")}</Label>
+                      <Input id="pwd-s" type="password" placeholder={t("auth.passwordPh")} minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} maxLength={128} />
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Información académica
+                    {t("auth.academicData")}
                   </h3>
                   <div className="space-y-2">
-                    <Label>¿Eres estudiante?</Label>
+                    <Label>{t("auth.isStudent")}</Label>
                     <div className="flex gap-3">
                       <Button
                         type="button"
@@ -240,7 +242,7 @@ const Auth = () => {
                         className="flex-1"
                         onClick={() => setEsEstudiante(true)}
                       >
-                        Sí
+                        {t("auth.yes")}
                       </Button>
                       <Button
                         type="button"
@@ -248,7 +250,7 @@ const Auth = () => {
                         className="flex-1"
                         onClick={() => setEsEstudiante(false)}
                       >
-                        No
+                        {t("auth.no")}
                       </Button>
                     </div>
                   </div>
@@ -256,12 +258,12 @@ const Auth = () => {
                   {esEstudiante === true && (
                     <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
                       <div className="space-y-1.5">
-                        <Label htmlFor="universidad">Centro de estudios</Label>
-                        <Input id="universidad" placeholder="Nombre de tu universidad" value={universidad} onChange={(e) => setUniversidad(e.target.value)} maxLength={200} />
+                        <Label htmlFor="universidad">{t("auth.studyCenter")}</Label>
+                        <Input id="universidad" placeholder={t("auth.studyCenterPh")} value={universidad} onChange={(e) => setUniversidad(e.target.value)} maxLength={200} />
                       </div>
                       <div className="space-y-1.5">
-                        <Label htmlFor="carrera">Carrera/Grado</Label>
-                        <Input id="carrera" placeholder="Carrera que estudias" value={carrera} onChange={(e) => setCarrera(e.target.value)} maxLength={200} />
+                        <Label htmlFor="carrera">{t("auth.degree")}</Label>
+                        <Input id="carrera" placeholder={t("auth.degreePh")} value={carrera} onChange={(e) => setCarrera(e.target.value)} maxLength={200} />
                       </div>
                     </div>
                   )}
@@ -269,7 +271,7 @@ const Auth = () => {
 
                 <div className="flex items-center gap-2 text-xs text-muted-foreground bg-accent/50 rounded-lg p-3">
                   <Shield className="h-4 w-4 shrink-0 text-primary" />
-                  <span>Tus datos son confidenciales y están protegidos.</span>
+                  <span>{t("auth.dataProtected")}</span>
                 </div>
 
                 <div className="flex items-start gap-3">
@@ -280,19 +282,19 @@ const Auth = () => {
                     className="mt-0.5"
                   />
                   <label htmlFor="policy" className="text-sm text-muted-foreground leading-snug">
-                    He leído y acepto la{" "}
+                    {t("auth.policyAccept")}{" "}
                     <button
                       type="button"
                       className="text-primary underline hover:text-primary/80 font-medium"
                       onClick={() => setPolicyOpen(true)}
                     >
-                      Política de Privacidad
+                      {t("auth.privacyPolicy")}
                     </button>
                   </label>
                 </div>
 
                 <Button type="submit" className="w-full" disabled={loading || !signupValid}>
-                  {loading ? "Creando…" : "Crear cuenta"}
+                  {loading ? t("auth.creating") : t("auth.createBtn")}
                 </Button>
               </form>
             </TabsContent>
@@ -303,7 +305,7 @@ const Auth = () => {
               <span className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-card px-2 text-muted-foreground">o continúa con</span>
+              <span className="bg-card px-2 text-muted-foreground">{t("auth.or")}</span>
             </div>
           </div>
 
@@ -314,11 +316,11 @@ const Auth = () => {
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            Google
+            {t("auth.google")}
           </Button>
 
           <p className="text-center text-xs text-muted-foreground mt-6">
-            <Link to="/" className="hover:text-primary">← Volver al inicio</Link>
+            <Link to="/" className="hover:text-primary">{t("nav.backHome")}</Link>
           </p>
         </div>
       </div>
