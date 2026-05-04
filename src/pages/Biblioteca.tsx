@@ -301,6 +301,7 @@ const ComparisonView = ({
   items: LibraryItem[];
   onClose: () => void;
 }) => {
+  const { t } = useTranslation();
   const enriched = items.map((it) => ({ item: it, metrics: computeMetrics(it.name) }));
   const maxPrice = Math.max(
     ...enriched.map(({ item }) => parseFloat(item.price.replace(/[^\d.,]/g, "").replace(",", ".")) || 0),
@@ -310,9 +311,9 @@ const ComparisonView = ({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-foreground">Comparativa</h2>
+        <h2 className="text-2xl font-bold text-foreground">{t("library.comparison")}</h2>
         <Button variant="outline" onClick={onClose} className="rounded-xl">
-          <X className="h-4 w-4 mr-2" /> Cerrar
+          <X className="h-4 w-4 mr-2" /> {t("common.close")}
         </Button>
       </div>
 
@@ -340,13 +341,13 @@ const ComparisonView = ({
               </div>
 
               {/* Lugar */}
-              <Metric label="Lugar" valueText={item.location} icon={<MapPin className="h-3.5 w-3.5" />} />
+              <Metric label={t("library.metrics.place")} valueText={item.location} icon={<MapPin className="h-3.5 w-3.5" />} />
 
               {/* Precio medio */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-                    <Euro className="h-3.5 w-3.5" /> Precio anual
+                    <Euro className="h-3.5 w-3.5" /> {t("library.metrics.annualPrice")}
                   </span>
                   <span className="text-sm font-semibold text-foreground">{item.price}</span>
                 </div>
@@ -357,7 +358,7 @@ const ComparisonView = ({
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-                    <Briefcase className="h-3.5 w-3.5" /> Salida laboral
+                    <Briefcase className="h-3.5 w-3.5" /> {t("library.metrics.employability")}
                   </span>
                   <span className="text-sm font-semibold text-foreground">
                     {Math.round(metrics.avgEmpleabilidad)}%
@@ -370,7 +371,7 @@ const ComparisonView = ({
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-                    <Heart className="h-3.5 w-3.5" /> Nivel de estrés
+                    <Heart className="h-3.5 w-3.5" /> {t("library.metrics.stress")}
                   </span>
                   <span className="text-sm font-semibold text-foreground">
                     {metrics.reviewsCount > 0 ? `${Math.round(metrics.avgEstres)}%` : "—"}
@@ -383,7 +384,7 @@ const ComparisonView = ({
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-                    <Star className="h-3.5 w-3.5" /> Valoración media
+                    <Star className="h-3.5 w-3.5" /> {t("library.metrics.avgRating")}
                   </span>
                   <span className="text-sm font-semibold text-foreground">
                     {metrics.reviewsCount > 0 ? metrics.avgRating.toFixed(1) : "—"}
@@ -392,19 +393,21 @@ const ComparisonView = ({
                 <Bar value={(metrics.avgRating / 5) * 100} color="bg-yellow-400" />
                 <p className="text-[11px] text-muted-foreground mt-1">
                   {metrics.reviewsCount > 0
-                    ? `Basado en ${metrics.reviewsCount} reseña${metrics.reviewsCount === 1 ? "" : "s"}`
-                    : "Sin reseñas todavía"}
+                    ? metrics.reviewsCount === 1
+                      ? t("library.metrics.basedOnOne", { count: metrics.reviewsCount })
+                      : t("library.metrics.basedOnMany", { count: metrics.reviewsCount })
+                    : t("library.metrics.noReviews")}
                 </p>
               </div>
 
               {/* Tipo / duración */}
               <div className="grid grid-cols-2 gap-2 pt-3 border-t border-border">
                 <div>
-                  <p className="text-[11px] text-muted-foreground">Tipo</p>
+                  <p className="text-[11px] text-muted-foreground">{t("library.metrics.type")}</p>
                   <p className="text-sm font-medium text-foreground">{item.type}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-muted-foreground">Duración</p>
+                  <p className="text-[11px] text-muted-foreground">{t("library.metrics.duration")}</p>
                   <p className="text-sm font-medium text-foreground">{item.duration}</p>
                 </div>
               </div>
