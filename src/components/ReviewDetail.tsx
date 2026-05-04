@@ -39,11 +39,17 @@ const InfoItem = ({ icon: Icon, label, value }: { icon: React.ElementType; label
 );
 
 const ReviewDetail = ({ review, masterName, centerName, onBack }: ReviewDetailProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { getLikes, hasLiked, toggleLike } = useReviewLikes();
   const { translate, clear, getTranslation, isLoading } = useReviewTranslation();
   const liked = hasLiked(review.id);
   const likeCount = getLikes(review.id);
+  const lang = (i18n.resolvedLanguage ?? i18n.language ?? "es").slice(0, 2);
+  // Si la reseña trae una traducción precargada para el idioma actual, úsala como base.
+  const baseComment =
+    lang === "en" && review.translations?.en?.fullComment
+      ? review.translations.en.fullComment
+      : review.fullComment;
   const translated = getTranslation(review.id);
   const loading = isLoading(review.id);
 
@@ -300,7 +306,7 @@ const ReviewDetail = ({ review, masterName, centerName, onBack }: ReviewDetailPr
             </div>
             <div className="bg-secondary/40 rounded-xl p-5">
               <p className="text-sm text-foreground leading-relaxed italic">
-                "{translated ?? review.fullComment}"
+                "{translated ?? baseComment}"
               </p>
               <p className="text-xs text-muted-foreground mt-3">— {review.userName}</p>
             </div>
