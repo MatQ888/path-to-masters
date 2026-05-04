@@ -1,4 +1,5 @@
 import { ArrowLeft, Bookmark, MapPin, Euro, Building2, Clock } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { MasterCenter } from "@/data/mockCenters";
 import { useLibrary } from "@/hooks/useLibrary";
@@ -16,6 +17,7 @@ interface CentersListingProps {
  * Cada tarjeta tiene un botón marcapáginas para guardarla en la Biblioteca.
  */
 const CentersListing = ({ masterName, centers, onBack, onSelectCenter }: CentersListingProps) => {
+  const { t } = useTranslation();
   const { isSaved, toggle } = useLibrary();
 
   // Quitamos el prefijo "Máster en" para componer "Máster en X en Y".
@@ -28,13 +30,13 @@ const CentersListing = ({ masterName, centers, onBack, onSelectCenter }: Centers
           onClick={onBack}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" /> Volver a recomendaciones
+          <ArrowLeft className="h-4 w-4" /> {t("centers.back")}
         </button>
 
         <div className="text-center space-y-3 mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">{masterName}</h2>
           <p className="text-muted-foreground text-lg">
-            Centros donde se imparte. Elige uno para ver opiniones de sus alumnos.
+            {t("centers.subtitle")}
           </p>
         </div>
 
@@ -55,7 +57,7 @@ const CentersListing = ({ masterName, centers, onBack, onSelectCenter }: Centers
                 type: center.type,
                 duration: center.duration,
               });
-              toast(isNowSaved ? "Guardado en tu Biblioteca" : "Eliminado de tu Biblioteca");
+              toast(isNowSaved ? t("centers.savedToast") : t("centers.removedToast"));
             };
 
             return (
@@ -79,7 +81,7 @@ const CentersListing = ({ masterName, centers, onBack, onSelectCenter }: Centers
                       <button
                         type="button"
                         onClick={handleBookmark}
-                        aria-label={saved ? "Quitar de la Biblioteca" : "Guardar en la Biblioteca"}
+                        aria-label={saved ? t("centers.remove") : t("centers.save")}
                         aria-pressed={saved}
                         className={`shrink-0 rounded-full p-2 transition-colors md:hidden ${
                           saved
@@ -110,7 +112,7 @@ const CentersListing = ({ masterName, centers, onBack, onSelectCenter }: Centers
                     <button
                       type="button"
                       onClick={handleBookmark}
-                      aria-label={saved ? "Quitar de la Biblioteca" : "Guardar en la Biblioteca"}
+                      aria-label={saved ? t("centers.remove") : t("centers.save")}
                       aria-pressed={saved}
                       className={`hidden md:inline-flex rounded-full p-2 transition-colors ${
                         saved
@@ -125,7 +127,7 @@ const CentersListing = ({ masterName, centers, onBack, onSelectCenter }: Centers
                       className="rounded-xl"
                       onClick={() => onSelectCenter(center)}
                     >
-                      Ver opiniones
+                      {t("centers.viewReviews")}
                     </Button>
                   </div>
                 </div>
@@ -135,7 +137,7 @@ const CentersListing = ({ masterName, centers, onBack, onSelectCenter }: Centers
 
           {centers.length === 0 && (
             <div className="text-center py-16 text-muted-foreground">
-              <p>No tenemos centros registrados todavía para este programa.</p>
+              <p>{t("centers.empty")}</p>
             </div>
           )}
         </div>
