@@ -1,4 +1,14 @@
 {
+  "common": {
+    "back": "Volver",
+    "previous": "Anterior",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "save": "Guardar",
+    "loading": "Cargando…",
+    "noResults": "Sin resultados",
+    "selected": "Seleccionado"
+  },
   "nav": {
     "home": "Inicio",
     "language": "Idioma",
@@ -9,7 +19,203 @@
     "settings": "Configuración",
     "logout": "Cerrar sesión",
     "login": "Iniciar sesión",
-    "loginShort": "Entrar"
+    "loginShort": "Entrar",
+    "backHome": "← Volver al inicio"
+  },
+  "hero": {
+    "start": "Comenzar"
+  },
+  "actionSelection": {
+    "title": "¿Qué te gustaría hacer?",
+    "subtitle": "Elige una opción para continuar",
+    "give": {
+      "title": "Dar información",
+      "description": "Comparte datos sobre tu centro de estudios para ayudar a otros estudiantes."
+    },
+    "get": {
+      "title": "Obtener información",
+      "description": "Recibe recomendaciones de másteres personalizados según tu perfil.",
+      "recommended": "Recomendado"
+    }
+  },
+  "questionnaire": {
+    "stepOf": "Paso {{current}} de {{total}}",
+    "confirmBudget": "Confirmar presupuesto",
+    "searchMaster": "Escribe el máster que buscas...",
+    "searchPlaceholder": "Escribe para buscar...",
+    "searchHint": "Escribe para ver sugerencias o introduce tu propio máster",
+    "selectedLabel": "Seleccionado:",
+    "noSearchResults": "No se encontraron resultados para \"{{query}}\"",
+    "startTyping": "Empieza a escribir para ver las opciones disponibles",
+    "searchFor": "Buscar \"{{query}}\"",
+    "budgetMax": "+60.000 €",
+    "questions": {
+      "sectorAcademico": "¿En qué sector quieres especializarte?",
+      "masterBuscado": "¿Qué máster estás buscando?",
+      "presupuesto": "¿Cuál es tu presupuesto anual?",
+      "presupuestoHelp": "Esta pregunta se refiere a cuánto dinero estás dispuesto a pagar en un año por tus estudios, incluyendo matrícula y otros gastos asociados.",
+      "lugar": "¿Dónde te gustaría estudiar?",
+      "comunidadAutonoma": "¿En qué Comunidad Autónoma te gustaría estudiar?",
+      "provincia": "¿En qué provincia te gustaría estudiar?",
+      "pais": "¿En qué país te gustaría estudiar?",
+      "ciudadInternacional": "¿En qué ciudad te gustaría estudiar?",
+      "formatoEstudio": "¿Qué formato de estudio prefieres?",
+      "sectorPublicoPrivado": "¿Prefieres sector público o privado?"
+    },
+    "options": {
+      "Nacional": "Nacional",
+      "Internacional": "Internacional",
+      "Mixto (un año dentro y otro fuera)": "Mixto (un año dentro y otro fuera)",
+      "Presencial": "Presencial",
+      "Online": "Online",
+      "Semipresencial": "Semipresencial",
+      "Público": "Público",
+      "Privado": "Privado"
+    }
+  },
+  "sectors": {
+    "ingenieria": { "label": "Ingeniería y Tecnología", "description": "Aeroespacial, IA, datos, robótica y más" },
+    "sociales": { "label": "Ciencias Sociales y Jurídicas", "description": "Derecho, MBA, finanzas, marketing" },
+    "artes": { "label": "Artes y Humanidades", "description": "Filosofía, historia, literatura, traducción" },
+    "salud": { "label": "Ciencias de la Salud", "description": "Psicología, enfermería, biomedicina" }
+  },
+  "giveForm": {
+    "title": "Compartir información",
+    "subtitle": "Ayuda a otros usuarios compartiendo tu experiencia académica o profesional.",
+    "apodoNotice": "Toda la información que proporciones se publicará bajo tu apodo",
+    "anonymity": "Tus datos personales son confidenciales. Solo se publica la información del programa o experiencia bajo tu apodo.",
+    "sections": {
+      "location": "Localización",
+      "entity": "Entidad y programa",
+      "rating": "Valoración",
+      "experience": "Experiencia laboral",
+      "comment": "Comentario para otros usuarios"
+    },
+    "labels": {
+      "country": "País",
+      "ccaa": "Comunidad Autónoma",
+      "province": "Provincia",
+      "city": "Ciudad",
+      "entity": "Universidad, centro de máster o empresa",
+      "program": "Grado, máster o puesto",
+      "specialty": "Especialidad",
+      "sector": "Sector",
+      "format": "¿En qué formato se imparte?",
+      "requirements": "Requisitos o nota de corte",
+      "dropout": "¿Qué nivel de abandono percibes?",
+      "employability": "¿Cómo ves la salida laboral?",
+      "investment": "Precio o inversión anual aproximada (€)",
+      "stress": "Nivel de estrés",
+      "keyInfo": "Información clave"
+    },
+    "placeholders": {
+      "country": "Selecciona un país",
+      "ccaa": "Selecciona una CC.AA.",
+      "province": "Selecciona provincia",
+      "city": "Escribe la ciudad",
+      "entity": "Busca por nombre o siglas (ej. UPM, Carlos III)",
+      "program": "Ej: Ingeniería Aeroespacial / Data Analyst",
+      "specialty": "Selecciona una especialidad",
+      "sector": "Público / Privado",
+      "format": "Selecciona un formato",
+      "requirements": "Ej: 12.5 / Entrevista + Portfolio",
+      "investment": "Ej: 8000",
+      "comment": "Cuéntanos sobre la calidad de los profesores, si es muy teórico o práctico, y si los contactos que haces valen la pena",
+      "company": "Empresa",
+      "role": "Puesto / Rol",
+      "period": "Periodo (ej. 2021-2023 o 1 año)"
+    },
+    "hints": {
+      "pickCountryFirst": "Elige primero un país",
+      "requirements": "Si es universidad, pon la nota de corte. Si es máster o empresa, describe brevemente el proceso (ej. Entrevista + Inglés B2)."
+    },
+    "experience": {
+      "intro": "Añade empresas u ofertas en las que has trabajado. Esto nos ayudará a construir el comparador de salidas profesionales.",
+      "empty": "Aún no has añadido ninguna experiencia laboral.",
+      "item": "Experiencia #{{n}}",
+      "remove": "Eliminar experiencia",
+      "add": "Añadir experiencia laboral"
+    },
+    "submit": "Enviar información",
+    "thankYou": {
+      "titleNew": "¡Gracias por contribuir!",
+      "titleUpdate": "¡Información actualizada!",
+      "messageNew": "Tu información ha sido publicada correctamente.",
+      "messageUpdate": "Tus cambios se han guardado correctamente.",
+      "publishedAs": "Publicado bajo el apodo",
+      "update": "Actualizar información",
+      "back": "Volver al inicio"
+    },
+    "specialties": {
+      "Ingeniería y Tecnología": "Ingeniería y Tecnología",
+      "Ciencias sociales y jurídicas": "Ciencias sociales y jurídicas",
+      "Artes y humanidades": "Artes y humanidades",
+      "Ciencias de la salud": "Ciencias de la salud"
+    },
+    "dropoutLevels": [
+      "Muy bajo (Nadie se va)",
+      "Bajo",
+      "Normal",
+      "Alto",
+      "Muy alto (Muchos dejan el camino)"
+    ],
+    "employabilityLevels": [
+      "Muy difícil",
+      "Difícil",
+      "Normal",
+      "Fácil",
+      "Muy fácil (Te contratan antes de acabar)"
+    ],
+    "stressLevels": ["Muy relajado", "Relajado", "Normal", "Estresado", "Muy estresado"]
+  },
+  "results": {
+    "title": "Tus recomendaciones",
+    "subtitleBase": "Basadas en tu perfil:",
+    "viewMore": "Ver más",
+    "notFound": "¿No encuentras lo que buscas?",
+    "repeatQuestionnaire": "Repetir cuestionario"
+  },
+  "centers": {
+    "back": "Volver a recomendaciones",
+    "subtitle": "Centros donde se imparte. Elige uno para ver opiniones de sus alumnos.",
+    "viewReviews": "Ver opiniones",
+    "save": "Guardar en la Biblioteca",
+    "remove": "Quitar de la Biblioteca",
+    "empty": "No tenemos centros registrados todavía para este programa.",
+    "savedToast": "Guardado en tu Biblioteca",
+    "removedToast": "Eliminado de tu Biblioteca"
+  },
+  "library": {
+    "title": "Tu Biblioteca",
+    "emptyHint": "Aquí aparecerán los másters que vayas guardando.",
+    "savedOne": "{{count}} opción guardada",
+    "savedMany": "{{count}} opciones guardadas",
+    "compare": "Comparar",
+    "compareCount": "Comparar ({{count}})",
+    "compareInfo": "Selecciona hasta <strong>{{max}}</strong> opciones para comparar. Llevas <strong>{{count}}</strong>.",
+    "emptyTitle": "No has guardado nada aún.",
+    "emptySubtitle": "Explora másteres para añadirlos a tu biblioteca.",
+    "explore": "Explorar másteres",
+    "comparison": "Comparativa",
+    "metrics": {
+      "place": "Lugar",
+      "annualPrice": "Precio anual",
+      "employability": "Salida laboral",
+      "stress": "Nivel de estrés",
+      "avgRating": "Valoración media",
+      "type": "Tipo",
+      "duration": "Duración",
+      "basedOnOne": "Basado en {{count}} reseña",
+      "basedOnMany": "Basado en {{count}} reseñas",
+      "noReviews": "Sin reseñas todavía"
+    },
+    "toasts": {
+      "removed": "Eliminado de tu Biblioteca",
+      "maxReached": "Solo puedes comparar hasta {{max}} opciones",
+      "minRequired": "Selecciona al menos 2 opciones para comparar"
+    },
+    "reviewOne": "{{count}} reseña",
+    "reviewMany": "{{count}} reseñas"
   },
   "reviews": {
     "sortBy": "Ordenar por",
@@ -21,10 +227,164 @@
     "viewDetail": "Ver detalle completo →",
     "empty": "No hay reseñas disponibles para este programa todavía.",
     "backToRecommendations": "Volver a recomendaciones",
+    "backToReviews": "Volver a reseñas",
     "like": "Me gusta",
     "unlike": "Quitar me gusta",
     "translate": "Traducir comentario",
     "translating": "Traduciendo…",
-    "showOriginal": "Ver original"
+    "showOriginal": "Ver original",
+    "blocks": {
+      "ficha": "Ficha Técnica",
+      "inversion": "Inversión y Tiempo",
+      "metodologia": "Metodología y Exigencia",
+      "valor": "Valor Añadido",
+      "resultados": "Resultados y Empleabilidad",
+      "dafo": "Análisis DAFO",
+      "comentario": "Comentario del Usuario"
+    },
+    "fields": {
+      "specialty": "Especialidad",
+      "sector": "Sector",
+      "location": "Ubicación",
+      "format": "Formato",
+      "languages": "Idiomas",
+      "totalDuration": "Duración total",
+      "annualPrice": "Precio anual",
+      "difficulty": "Nivel de dificultad",
+      "attendance": "Asistencia",
+      "stress": "Nivel de estrés",
+      "internships": "Prácticas",
+      "networking": "Networking",
+      "perceivedEmployability": "Empleabilidad percibida",
+      "companyOpportunities": "Oportunidades con empresas",
+      "avgSalary": "Dinero medio al salir",
+      "beginner": "🟢 Novato",
+      "mid": "🟡 Mid (4-7a)",
+      "senior": "🔴 Senior (10+a)",
+      "perMonth": "/mes",
+      "strengths": "💪 Fortalezas",
+      "weaknesses": "⚠️ Debilidades",
+      "opportunities": "🚀 Oportunidades"
+    }
+  },
+  "auth": {
+    "title": "Futureyou",
+    "subtitle": "Accede a tu cuenta",
+    "tabLogin": "Iniciar sesión",
+    "tabSignup": "Crear cuenta",
+    "email": "Email",
+    "password": "Contraseña",
+    "loginBtn": "Iniciar sesión",
+    "loggingIn": "Entrando…",
+    "forgot": "¿Has olvidado tu contraseña?",
+    "personalData": "Datos personales",
+    "academicData": "Información académica",
+    "name": "Nombre",
+    "namePh": "Tu nombre",
+    "lastName": "Apellido",
+    "lastNamePh": "Tus apellidos",
+    "nickname": "Apodo",
+    "nicknamePh": "Ej. juanperez95",
+    "nicknameHint": "Este apodo será el que se usará para publicar toda la información que se dará.",
+    "gender": "Género",
+    "genderPh": "Selecciona una opción",
+    "male": "Masculino",
+    "female": "Femenino",
+    "preferNot": "Prefiero no indicarlo",
+    "emailPh": "tu@email.com",
+    "phone": "Teléfono (opcional)",
+    "phonePh": "+34 600 000 000",
+    "passwordPh": "Mínimo 6 caracteres",
+    "isStudent": "¿Eres estudiante?",
+    "yes": "Sí",
+    "no": "No",
+    "studyCenter": "Centro de estudios",
+    "studyCenterPh": "Nombre de tu universidad",
+    "degree": "Carrera/Grado",
+    "degreePh": "Carrera que estudias",
+    "dataProtected": "Tus datos son confidenciales y están protegidos.",
+    "policyAccept": "He leído y acepto la",
+    "privacyPolicy": "Política de Privacidad",
+    "createBtn": "Crear cuenta",
+    "creating": "Creando…",
+    "or": "o continúa con",
+    "google": "Google",
+    "errors": {
+      "completeFields": "Completa todos los campos obligatorios",
+      "emailRegistered": "Este email ya está registrado",
+      "invalidLogin": "Email o contraseña incorrectos",
+      "googleFail": "No se pudo iniciar sesión con Google",
+      "emailFirst": "Introduce tu email primero"
+    },
+    "success": {
+      "created": "¡Cuenta creada!",
+      "welcome": "¡Bienvenido!",
+      "resetSent": "Te hemos enviado un email para restablecer la contraseña"
+    }
+  },
+  "policy": {
+    "title": "Política de Privacidad",
+    "intro": "Lee detenidamente antes de aceptar",
+    "p0": "La presente Política de Privacidad establece los términos en que <b>Futureyou</b> usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Estamos comprometidos con la seguridad de los datos de nuestros usuarios.",
+    "h1": "1. Información que es recogida",
+    "p1": "Nuestro sitio web podrá recoger información personal como:",
+    "p1l1": "<b>Identificación:</b> Nombre completo.",
+    "p1l2": "<b>Información de contacto:</b> Correo electrónico y número de teléfono.",
+    "p1l3": "<b>Datos académicos:</b> Institución o lugar de estudio.",
+    "p1l4": "<b>Seguridad:</b> Contraseña (la cual será encriptada mediante algoritmos de hashing para su protección).",
+    "h2": "2. Uso de la información recogida",
+    "p2": "Futureyou emplea la información con el fin de proporcionar el mejor servicio posible, particularmente para:",
+    "p2l1": "Mantener un registro de usuarios y perfiles personalizados.",
+    "p2l2": "Procesar y personalizar las recomendaciones de mercado basadas en el perfil académico y las respuestas del usuario.",
+    "p2l3": "Enviar notificaciones sobre actualizaciones del servicio o información relevante solicitada por el usuario.",
+    "p2l4": "Garantizar el acceso seguro a la plataforma mediante la verificación de credenciales.",
+    "h3": "3. Seguridad de los datos",
+    "p3": "Futureyou está altamente comprometido para cumplir con el compromiso de mantener su información segura. Usamos los protocolos de seguridad web más actuales y estándares de encriptación avanzados para asegurarnos que no exista ningún acceso no autorizado.",
+    "p3note": "Nota sobre la seguridad: Su contraseña se almacena de forma irreversible; ningún administrador de este sitio tiene acceso a su contraseña en texto plano.",
+    "h4": "4. Control de su información personal",
+    "p4a": "En cualquier momento usted puede restringir la recopilación o el uso de la información personal que es proporcionada a nuestro sitio web.",
+    "p4b": "Usted tiene derecho a solicitar el acceso, rectificación o eliminación definitiva de sus datos de nuestra base de datos.",
+    "p4c": "Esta compañía no venderá, cederá ni distribuirá la información personal que es recopilada sin su consentimiento explícito, salvo que sea requerido por una autoridad judicial mediante una orden legal.",
+    "h5": "5. Enlaces a Terceros",
+    "p5": "Este sitio web pudiera contener enlaces a otros sitios de interés. Una vez que usted haga clic en estos enlaces y abandone nuestra página, Futureyou deja de tener control sobre el sitio al que es redirigido. Por lo tanto, no somos responsables de los términos de privacidad ni de la protección de sus datos en esos otros sitios terceros.",
+    "h6": "6. Actualización de la Política",
+    "p6": "Nos reservamos el derecho de cambiar los términos de la presente Política de Privacidad en cualquier momento para adaptarla a novedades legislativas, jurisprudenciales o prácticas del mercado.",
+    "footer": "<b>Futureyou</b><br/>Última actualización: 12/04/2026"
+  },
+  "formats": {
+    "Presencial": "Presencial",
+    "Online": "Online",
+    "Semipresencial": "Semipresencial"
+  },
+  "countries": {
+    "ES": "España", "FR": "Francia", "PT": "Portugal", "IT": "Italia", "DE": "Alemania",
+    "GB": "Reino Unido", "IE": "Irlanda", "NL": "Países Bajos", "BE": "Bélgica", "CH": "Suiza",
+    "AT": "Austria", "DK": "Dinamarca", "SE": "Suecia", "NO": "Noruega", "FI": "Finlandia",
+    "PL": "Polonia", "US": "Estados Unidos", "CA": "Canadá", "MX": "México", "AR": "Argentina",
+    "CL": "Chile", "CO": "Colombia", "PE": "Perú", "BR": "Brasil", "AU": "Australia",
+    "NZ": "Nueva Zelanda", "JP": "Japón", "CN": "China", "SG": "Singapur", "AE": "Emiratos Árabes Unidos"
+  },
+  "ccaa": {
+    "AN": "Andalucía", "AR": "Aragón", "AS": "Principado de Asturias", "IB": "Illes Balears",
+    "CN": "Canarias", "CB": "Cantabria", "CL": "Castilla y León", "CM": "Castilla-La Mancha",
+    "CT": "Cataluña", "EX": "Extremadura", "GA": "Galicia", "MD": "Comunidad de Madrid",
+    "MC": "Región de Murcia", "NC": "Comunidad Foral de Navarra", "PV": "País Vasco",
+    "RI": "La Rioja", "VC": "Comunitat Valenciana"
+  },
+  "provinces": {
+    "Almería": "Almería", "Cádiz": "Cádiz", "Córdoba": "Córdoba", "Granada": "Granada",
+    "Huelva": "Huelva", "Jaén": "Jaén", "Málaga": "Málaga", "Sevilla": "Sevilla",
+    "Huesca": "Huesca", "Teruel": "Teruel", "Zaragoza": "Zaragoza", "Asturias": "Asturias",
+    "Illes Balears": "Illes Balears", "Las Palmas": "Las Palmas",
+    "Santa Cruz de Tenerife": "Santa Cruz de Tenerife", "Cantabria": "Cantabria",
+    "Ávila": "Ávila", "Burgos": "Burgos", "León": "León", "Palencia": "Palencia",
+    "Salamanca": "Salamanca", "Segovia": "Segovia", "Soria": "Soria", "Valladolid": "Valladolid",
+    "Zamora": "Zamora", "Albacete": "Albacete", "Ciudad Real": "Ciudad Real", "Cuenca": "Cuenca",
+    "Guadalajara": "Guadalajara", "Toledo": "Toledo", "Barcelona": "Barcelona", "Girona": "Girona",
+    "Lleida": "Lleida", "Tarragona": "Tarragona", "Badajoz": "Badajoz", "Cáceres": "Cáceres",
+    "A Coruña": "A Coruña", "Lugo": "Lugo", "Ourense": "Ourense", "Pontevedra": "Pontevedra",
+    "Madrid": "Madrid", "Murcia": "Murcia", "Navarra": "Navarra", "Álava": "Álava",
+    "Gipuzkoa": "Gipuzkoa", "Bizkaia": "Bizkaia", "La Rioja": "La Rioja", "Alicante": "Alicante",
+    "Castellón": "Castellón", "Valencia": "Valencia"
   }
 }
