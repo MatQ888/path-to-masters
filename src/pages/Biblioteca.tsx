@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   ArrowLeft,
   Bookmark,
@@ -87,6 +88,7 @@ const Bar = ({ value, color = "bg-primary" }: { value: number; color?: string })
 );
 
 const Biblioteca = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { items, remove } = useLibrary();
   const [compareMode, setCompareMode] = useState(false);
@@ -97,7 +99,7 @@ const Biblioteca = () => {
     setSelectedIds((prev) => {
       if (prev.includes(id)) return prev.filter((x) => x !== id);
       if (prev.length >= MAX_COMPARE) {
-        toast(`Solo puedes comparar hasta ${MAX_COMPARE} opciones`);
+        toast(t("library.toasts.maxReached", { max: MAX_COMPARE }));
         return prev;
       }
       return [...prev, id];
@@ -111,7 +113,7 @@ const Biblioteca = () => {
 
   const startComparison = () => {
     if (selectedIds.length < 2) {
-      toast("Selecciona al menos 2 opciones para comparar");
+      toast(t("library.toasts.minRequired"));
       return;
     }
     setShowComparison(true);
@@ -132,19 +134,21 @@ const Biblioteca = () => {
             onClick={() => navigate("/")}
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors"
           >
-            <ArrowLeft className="h-4 w-4" /> Volver
+            <ArrowLeft className="h-4 w-4" /> {t("common.back")}
           </button>
 
           <header className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <LibraryIcon className="h-7 w-7 text-primary" />
-                <h1 className="text-3xl md:text-4xl font-bold text-foreground">Tu Biblioteca</h1>
+                <h1 className="text-3xl md:text-4xl font-bold text-foreground">{t("library.title")}</h1>
               </div>
               <p className="text-muted-foreground">
                 {items.length === 0
-                  ? "Aquí aparecerán los másters que vayas guardando."
-                  : `${items.length} opci${items.length === 1 ? "ón guardada" : "ones guardadas"}`}
+                  ? t("library.emptyHint")
+                  : items.length === 1
+                    ? t("library.savedOne", { count: items.length })
+                    : t("library.savedMany", { count: items.length })}
               </p>
             </div>
 
@@ -178,14 +182,14 @@ const Biblioteca = () => {
             <div className="bg-card rounded-2xl border border-border p-12 text-center">
               <Bookmark className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
               <p className="text-lg font-medium text-foreground mb-2">
-                No has guardado nada aún.
+                {t("library.emptyTitle")}
               </p>
               <p className="text-sm text-muted-foreground mb-6">
-                Explora másteres para añadirlos a tu biblioteca.
+                {t("library.emptySubtitle")}
               </p>
               <Link to="/">
                 <Button variant="cta" className="rounded-xl">
-                  Explorar másteres
+                  {t("library.explore")}
                 </Button>
               </Link>
             </div>
@@ -193,10 +197,12 @@ const Biblioteca = () => {
 
           {/* Aviso modo comparar */}
           {compareMode && items.length > 0 && !showComparison && (
-            <div className="bg-accent/60 border border-primary/20 rounded-xl p-4 mb-6 text-sm text-foreground">
-              Selecciona hasta <strong>{MAX_COMPARE}</strong> opciones para comparar.
-              Llevas <strong>{selectedIds.length}</strong>.
-            </div>
+            <div
+              className="bg-accent/60 border border-primary/20 rounded-xl p-4 mb-6 text-sm text-foreground"
+              dangerouslySetInnerHTML={{
+                __html: t("library.compareInfo", { max: MAX_COMPARE, count: selectedIds.length }),
+              }}
+            />
           )}
 
           {/* Listado de tarjetas guardadas */}
@@ -240,9 +246,9 @@ const Biblioteca = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           remove(item.id);
-                          toast("Eliminado de tu Biblioteca");
+                          toast(t("library.toasts.removed"));
                         }}
-                        aria-label="Quitar de la Biblioteca"
+                        aria-label={t("centers.remove")}
                         className="absolute top-4 right-4 p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                       >
                         <X className="h-4 w-4" />
@@ -264,8 +270,10 @@ const Biblioteca = () => {
                       <div className="flex items-center gap-2 pt-3 border-t border-border">
                         <StarRating rating={metrics.avgRating} />
                         <span className="text-xs text-muted-foreground">
-                          {metrics.avgRating.toFixed(1)} · {metrics.reviewsCount} reseña
-                          {metrics.reviewsCount === 1 ? "" : "s"}
+                          {metrics.avgRating.toFixed(1)} ·{" "}
+                          {metrics.reviewsCount === 1
+                            ? t("library.reviewOne", { count: metrics.reviewsCount })
+                            : t("library.reviewMany", { count: metrics.reviewsCount })}
                         </span>
                       </div>
                     )}
