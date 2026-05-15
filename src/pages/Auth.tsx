@@ -329,52 +329,50 @@ const Auth = () => {
       <Dialog open={policyOpen} onOpenChange={setPolicyOpen}>
         <DialogContent className="max-w-2xl max-h-[85vh] p-0">
           <DialogHeader className="p-6 pb-0">
-            <DialogTitle className="text-xl font-bold">Política de Privacidad</DialogTitle>
-            <DialogDescription>Lee detenidamente antes de aceptar</DialogDescription>
+            <DialogTitle className="text-xl font-bold">{t("policy.title")}</DialogTitle>
+            <DialogDescription>{t("policy.intro")}</DialogDescription>
           </DialogHeader>
           <ScrollArea className="h-[60vh] px-6 pb-6">
             <div className="space-y-4 text-sm text-muted-foreground leading-relaxed pr-4">
-              <p>
-                La presente Política de Privacidad establece los términos en que <strong className="text-foreground">Futureyou</strong> usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Estamos comprometidos con la seguridad de los datos de nuestros usuarios.
-              </p>
+              <p dangerouslySetInnerHTML={{ __html: t("policy.p0") }} />
 
-              <h3 className="text-base font-semibold text-foreground">1. Información que es recogida</h3>
-              <p>Nuestro sitio web podrá recoger información personal como:</p>
+              <h3 className="text-base font-semibold text-foreground">{t("policy.h1")}</h3>
+              <p>{t("policy.p1")}</p>
               <ul className="list-disc pl-5 space-y-1">
-                <li><strong className="text-foreground">Identificación:</strong> Nombre completo.</li>
-                <li><strong className="text-foreground">Información de contacto:</strong> Correo electrónico y número de teléfono.</li>
-                <li><strong className="text-foreground">Datos académicos:</strong> Institución o lugar de estudio.</li>
-                <li><strong className="text-foreground">Seguridad:</strong> Contraseña (la cual será encriptada mediante algoritmos de hashing para su protección).</li>
+                <li dangerouslySetInnerHTML={{ __html: t("policy.p1l1") }} />
+                <li dangerouslySetInnerHTML={{ __html: t("policy.p1l2") }} />
+                <li dangerouslySetInnerHTML={{ __html: t("policy.p1l3") }} />
+                <li dangerouslySetInnerHTML={{ __html: t("policy.p1l4") }} />
               </ul>
 
-              <h3 className="text-base font-semibold text-foreground">2. Uso de la información recogida</h3>
-              <p>Futureyou emplea la información con el fin de proporcionar el mejor servicio posible, particularmente para:</p>
+              <h3 className="text-base font-semibold text-foreground">{t("policy.h2")}</h3>
+              <p>{t("policy.p2")}</p>
               <ul className="list-disc pl-5 space-y-1">
-                <li>Mantener un registro de usuarios y perfiles personalizados.</li>
-                <li>Procesar y personalizar las recomendaciones de mercado basadas en el perfil académico y las respuestas del usuario.</li>
-                <li>Enviar notificaciones sobre actualizaciones del servicio o información relevante solicitada por el usuario.</li>
-                <li>Garantizar el acceso seguro a la plataforma mediante la verificación de credenciales.</li>
+                <li>{t("policy.p2l1")}</li>
+                <li>{t("policy.p2l2")}</li>
+                <li>{t("policy.p2l3")}</li>
+                <li>{t("policy.p2l4")}</li>
               </ul>
 
-              <h3 className="text-base font-semibold text-foreground">3. Seguridad de los datos</h3>
-              <p>Futureyou está altamente comprometido para cumplir con el compromiso de mantener su información segura. Usamos los protocolos de seguridad web más actuales y estándares de encriptación avanzados para asegurarnos que no exista ningún acceso no autorizado.</p>
-              <p className="italic">Nota sobre la seguridad: Su contraseña se almacena de forma irreversible; ningún administrador de este sitio tiene acceso a su contraseña en texto plano.</p>
+              <h3 className="text-base font-semibold text-foreground">{t("policy.h3")}</h3>
+              <p>{t("policy.p3")}</p>
+              <p className="italic">{t("policy.p3note")}</p>
 
-              <h3 className="text-base font-semibold text-foreground">4. Control de su información personal</h3>
-              <p>En cualquier momento usted puede restringir la recopilación o el uso de la información personal que es proporcionada a nuestro sitio web.</p>
-              <p>Usted tiene derecho a solicitar el acceso, rectificación o eliminación definitiva de sus datos de nuestra base de datos.</p>
-              <p>Esta compañía no venderá, cederá ni distribuirá la información personal que es recopilada sin su consentimiento explícito, salvo que sea requerido por una autoridad judicial mediante una orden legal.</p>
+              <h3 className="text-base font-semibold text-foreground">{t("policy.h4")}</h3>
+              <p>{t("policy.p4a")}</p>
+              <p>{t("policy.p4b")}</p>
+              <p>{t("policy.p4c")}</p>
 
-              <h3 className="text-base font-semibold text-foreground">5. Enlaces a Terceros</h3>
-              <p>Este sitio web pudiera contener enlaces a otros sitios de interés. Una vez que usted haga clic en estos enlaces y abandone nuestra página, Futureyou deja de tener control sobre el sitio al que es redirigido. Por lo tanto, no somos responsables de los términos de privacidad ni de la protección de sus datos en esos otros sitios terceros.</p>
+              <h3 className="text-base font-semibold text-foreground">{t("policy.h5")}</h3>
+              <p>{t("policy.p5")}</p>
 
-              <h3 className="text-base font-semibold text-foreground">6. Actualización de la Política</h3>
-              <p>Nos reservamos el derecho de cambiar los términos de la presente Política de Privacidad en cualquier momento para adaptarla a novedades legislativas, jurisprudenciales o prácticas del mercado.</p>
+              <h3 className="text-base font-semibold text-foreground">{t("policy.h6")}</h3>
+              <p>{t("policy.p6")}</p>
 
-              <p className="pt-2 text-xs border-t border-border mt-4">
-                <strong className="text-foreground">Futureyou</strong><br />
-                Última actualización: 12/04/2026
-              </p>
+              <p
+                className="pt-2 text-xs border-t border-border mt-4"
+                dangerouslySetInnerHTML={{ __html: t("policy.footer") }}
+              />
             </div>
           </ScrollArea>
         </DialogContent>
