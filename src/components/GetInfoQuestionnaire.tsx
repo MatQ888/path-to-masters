@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, HelpCircle, Search, Building2, Monitor, CalendarDays } from "lucide-react";
+import { ArrowLeft, HelpCircle, Search, Building2, Monitor, CalendarDays, GraduationCap, BookOpen } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -75,7 +75,16 @@ const isNational = (a: Record<string, string>) =>
 
 const allSteps: StepDef[] = [
   { key: "sectorAcademico", type: "sectorCards" },
-  { key: "masterBuscado", type: "masterSearch", condition: (a) => !!a.sectorAcademico },
+  {
+    key: "tipoEstudio",
+    type: "iconOptions",
+    iconOptions: [
+      { label: "Carrera Universitaria", icon: <GraduationCap className="h-7 w-7" /> },
+      { label: "Máster", icon: <BookOpen className="h-7 w-7" /> },
+    ],
+    condition: (a) => !!a.sectorAcademico,
+  },
+  { key: "masterBuscado", type: "masterSearch", condition: (a) => !!a.sectorAcademico && !!a.tipoEstudio },
   {
     key: "presupuesto",
     type: "slider",
