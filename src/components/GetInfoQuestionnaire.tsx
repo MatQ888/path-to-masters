@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, HelpCircle, Search, Building2, Monitor, CalendarDays } from "lucide-react";
+import { ArrowLeft, HelpCircle, Search, Building2, Monitor, CalendarDays, GraduationCap, BookOpen } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -75,7 +75,16 @@ const isNational = (a: Record<string, string>) =>
 
 const allSteps: StepDef[] = [
   { key: "sectorAcademico", type: "sectorCards" },
-  { key: "masterBuscado", type: "masterSearch", condition: (a) => !!a.sectorAcademico },
+  {
+    key: "tipoEstudio",
+    type: "iconOptions",
+    iconOptions: [
+      { label: "Carrera Universitaria", icon: <GraduationCap className="h-7 w-7" /> },
+      { label: "Máster", icon: <BookOpen className="h-7 w-7" /> },
+    ],
+    condition: (a) => !!a.sectorAcademico,
+  },
+  { key: "masterBuscado", type: "masterSearch", condition: (a) => !!a.sectorAcademico && !!a.tipoEstudio },
   {
     key: "presupuesto",
     type: "slider",
@@ -169,7 +178,10 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
   const totalSteps = visibleSteps.length;
   const progress = ((stepIndex + 1) / totalSteps) * 100;
   const selected = answers[current.key];
-  const questionText = t(`questionnaire.questions.${current.key}`);
+  const isCarrera = answers.tipoEstudio === "Carrera Universitaria";
+  const questionKey =
+    current.key === "masterBuscado" && isCarrera ? "carreraBuscada" : current.key;
+  const questionText = t(`questionnaire.questions.${questionKey}`);
   const helpText = current.hasHelp ? t(`questionnaire.questions.${current.key}Help`) : "";
 
   const currentOptions = current.type === "autocomplete"
@@ -204,6 +216,10 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
       delete newAnswers.ciudadInternacional;
     }
     if (current.key === "sectorAcademico" && answers.sectorAcademico !== value) {
+      delete newAnswers.tipoEstudio;
+      delete newAnswers.masterBuscado;
+    }
+    if (current.key === "tipoEstudio" && answers.tipoEstudio !== value) {
       delete newAnswers.masterBuscado;
     }
     setAnswers(newAnswers);
@@ -306,7 +322,7 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   ref={masterInputRef}
-                  placeholder={t("questionnaire.searchMaster")}
+                  placeholder={t(isCarrera ? "questionnaire.searchCarrera" : "questionnaire.searchMaster")}
                   value={masterSearchText}
                   onChange={(e) => {
                     setMasterSearchText(e.target.value);

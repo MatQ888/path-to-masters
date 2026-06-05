@@ -1,4 +1,4 @@
-import { ArrowLeft, MapPin, Building2, BookOpen, Monitor, Languages, Clock, Euro, BarChart3, Users, Briefcase, Target, DollarSign, MessageSquare, Heart, GraduationCap, Handshake, Star, BookHeart } from "lucide-react";
+import { ArrowLeft, MapPin, Building2, BookOpen, Monitor, Languages, Clock, Euro, BarChart3, Users, Briefcase, Target, DollarSign, MessageSquare, Heart, GraduationCap, Handshake, Star, BookHeart, ExternalLink, Link as LinkIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Review } from "@/data/mockReviews";
 import { useReviewLikes } from "@/hooks/useReviewLikes";
@@ -14,6 +14,8 @@ interface ReviewDetailProps {
   masterName: string;
   /** Centro/universidad seleccionado en el nivel 2. Opcional. */
   centerName?: string;
+  /** Duración media (años) calculada a partir de las reseñas del programa. */
+  tiempoMedio?: number | null;
   onBack: () => void;
 }
 
@@ -38,7 +40,7 @@ const InfoItem = ({ icon: Icon, label, value }: { icon: React.ElementType; label
   </div>
 );
 
-const ReviewDetail = ({ review, masterName, centerName, onBack }: ReviewDetailProps) => {
+const ReviewDetail = ({ review, masterName, centerName, tiempoMedio, onBack }: ReviewDetailProps) => {
   const { t, i18n } = useTranslation();
   const { getLikes, hasLiked, toggleLike } = useReviewLikes();
   const { translate, clear, getTranslation, isLoading } = useReviewTranslation();
@@ -120,8 +122,17 @@ const ReviewDetail = ({ review, masterName, centerName, onBack }: ReviewDetailPr
             <h3 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-5">
               <Clock className="h-5 w-5 text-primary" /> {t("reviews.blocks.inversion")}
             </h3>
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
               <InfoItem icon={Clock} label={t("reviews.fields.totalDuration")} value={review.duracion} />
+              <InfoItem
+                icon={Clock}
+                label={t("reviews.fields.avgDuration")}
+                value={
+                  typeof tiempoMedio === "number"
+                    ? t("reviews.fields.yearsValue", { value: Number(tiempoMedio.toFixed(1)) })
+                    : t("reviews.fields.noDataYet")
+                }
+              />
               <InfoItem icon={Euro} label={t("reviews.fields.annualPrice")} value={review.precioAnual} />
             </div>
           </div>
@@ -311,6 +322,37 @@ const ReviewDetail = ({ review, masterName, centerName, onBack }: ReviewDetailPr
               <p className="text-xs text-muted-foreground mt-3">— {review.userName}</p>
             </div>
           </div>
+
+          {/* Bloque 7: Información oficial */}
+          {(review.linkPrograma || review.linkCentro) && (
+            <div className="bg-card rounded-2xl p-6 border border-border">
+              <h3 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-5">
+                <LinkIcon className="h-5 w-5 text-primary" /> {t("reviews.blocks.oficial")}
+              </h3>
+              <div className="flex flex-col sm:flex-row gap-3">
+                {review.linkPrograma && (
+                  <a
+                    href={review.linkPrograma}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium px-4 py-2.5 hover:opacity-90 transition-opacity"
+                  >
+                    <ExternalLink className="h-4 w-4" /> {t("reviews.actions.goToProgram")}
+                  </a>
+                )}
+                {review.linkCentro && (
+                  <a
+                    href={review.linkCentro}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-background text-foreground text-sm font-medium px-4 py-2.5 hover:bg-accent transition-colors"
+                  >
+                    <ExternalLink className="h-4 w-4" /> {t("reviews.actions.goToCenter")}
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

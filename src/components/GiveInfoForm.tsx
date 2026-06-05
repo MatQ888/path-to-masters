@@ -88,8 +88,12 @@ interface FormState {
   abandono: number;
   empleabilidad: number;
   inversion: string;
+  duracionOficial: string;
+  tiempoReal: string;
   estres: number;
   comentarios: string;
+  linkPrograma: string;
+  linkCentro: string;
   experiencia: WorkExperienceEntry[];
   publishedAt: string | null;
 }
@@ -107,8 +111,12 @@ const initialForm: FormState = {
   abandono: -1,
   empleabilidad: -1,
   inversion: "",
+  duracionOficial: "",
+  tiempoReal: "",
   estres: -1,
   comentarios: "",
+  linkPrograma: "",
+  linkCentro: "",
   experiencia: [],
   publishedAt: null,
 };
@@ -452,6 +460,33 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
             />
           </FieldWrapper>
 
+          {/* ---------- DURACIÓN ---------- */}
+          <SectionTitle>{t("giveForm.sections.duration")}</SectionTitle>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FieldWrapper label={t("giveForm.labels.officialDuration")}>
+              <Input
+                type="number"
+                min={0.5}
+                max={10}
+                step={0.5}
+                placeholder={t("giveForm.placeholders.years")}
+                value={form.duracionOficial}
+                onChange={(e) => update("duracionOficial", e.target.value)}
+              />
+            </FieldWrapper>
+            <FieldWrapper label={t("giveForm.labels.myDuration")}>
+              <Input
+                type="number"
+                min={0.5}
+                max={10}
+                step={0.5}
+                placeholder={t("giveForm.placeholders.years")}
+                value={form.tiempoReal}
+                onChange={(e) => update("tiempoReal", e.target.value)}
+              />
+            </FieldWrapper>
+          </div>
+
           <FieldWrapper label={t("giveForm.labels.stress")}>
             <div className="flex justify-between gap-2">
               {(t("giveForm.stressLevels", { returnObjects: true }) as string[]).map((label, i) => (
@@ -554,6 +589,24 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
             <p className="text-xs text-muted-foreground text-right mt-1">
               {form.comentarios.length}/2000
             </p>
+          </FieldWrapper>
+
+          <FieldWrapper label={t("giveForm.labels.programLink")}>
+            <Input
+              type="url"
+              placeholder="https://..."
+              value={form.linkPrograma}
+              onChange={(e) => update("linkPrograma", e.target.value)}
+            />
+          </FieldWrapper>
+
+          <FieldWrapper label={t("giveForm.labels.centerLink")}>
+            <Input
+              type="url"
+              placeholder="https://..."
+              value={form.linkCentro}
+              onChange={(e) => update("linkCentro", e.target.value)}
+            />
           </FieldWrapper>
 
           {/* ---------- ACTIONS ---------- */}
