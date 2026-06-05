@@ -178,7 +178,10 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
   const totalSteps = visibleSteps.length;
   const progress = ((stepIndex + 1) / totalSteps) * 100;
   const selected = answers[current.key];
-  const questionText = t(`questionnaire.questions.${current.key}`);
+  const isCarrera = answers.tipoEstudio === "Carrera Universitaria";
+  const questionKey =
+    current.key === "masterBuscado" && isCarrera ? "carreraBuscada" : current.key;
+  const questionText = t(`questionnaire.questions.${questionKey}`);
   const helpText = current.hasHelp ? t(`questionnaire.questions.${current.key}Help`) : "";
 
   const currentOptions = current.type === "autocomplete"
@@ -315,7 +318,7 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   ref={masterInputRef}
-                  placeholder={t("questionnaire.searchMaster")}
+                  placeholder={t(isCarrera ? "questionnaire.searchCarrera" : "questionnaire.searchMaster")}
                   value={masterSearchText}
                   onChange={(e) => {
                     setMasterSearchText(e.target.value);
