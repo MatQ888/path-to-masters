@@ -254,7 +254,12 @@
       "valor": "Added Value",
       "resultados": "Outcomes & Employability",
       "dafo": "SWOT Analysis",
-      "comentario": "User comment"
+      "comentario": "User comment",
+      "oficial": "Official information"
+    },
+    "actions": {
+      "goToProgram": "Go to official program",
+      "goToCenter": "Go to center/university"
     },
     "fields": {
       "specialty": "Specialty",
@@ -263,6 +268,9 @@
       "format": "Format",
       "languages": "Languages",
       "totalDuration": "Total duration",
+      "avgDuration": "Average duration",
+      "yearsValue": "{{value}} years",
+      "noDataYet": "No data yet",
       "annualPrice": "Annual price",
       "difficulty": "Difficulty level",
       "attendance": "Attendance",
