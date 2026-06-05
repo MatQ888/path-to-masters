@@ -60,11 +60,20 @@ const Results = ({ answers, onBack }: ResultsProps) => {
 
   // Nivel 3 (detalle de una reseña).
   if (view === "detail" && selectedReview) {
+    const allReviews = mockReviewsByMaster[selectedMasterName] || [];
+    const tiempos = allReviews
+      .map((r) => r.tiempoReal)
+      .filter((v): v is number => typeof v === "number" && v > 0);
+    const tiempoMedio =
+      tiempos.length > 0
+        ? tiempos.reduce((a, b) => a + b, 0) / tiempos.length
+        : null;
     return (
       <ReviewDetail
         review={selectedReview}
         masterName={selectedMasterName}
         centerName={selectedCenter?.name}
+        tiempoMedio={tiempoMedio}
         onBack={() => {
           setSelectedReview(null);
           setView("reviews");
