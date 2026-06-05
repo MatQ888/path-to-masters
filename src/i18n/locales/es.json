@@ -45,6 +45,7 @@
     "stepOf": "Paso {{current}} de {{total}}",
     "confirmBudget": "Confirmar presupuesto",
     "searchMaster": "Escribe el máster que buscas...",
+    "searchCarrera": "Escribe la carrera que buscas...",
     "searchPlaceholder": "Escribe para buscar...",
     "searchHint": "Escribe para ver sugerencias o introduce tu propio máster",
     "selectedLabel": "Seleccionado:",
@@ -54,7 +55,9 @@
     "budgetMax": "+60.000 €",
     "questions": {
       "sectorAcademico": "¿En qué sector quieres especializarte?",
+      "tipoEstudio": "¿Qué estás buscando?",
       "masterBuscado": "¿Qué máster estás buscando?",
+      "carreraBuscada": "¿Qué carrera estás buscando?",
       "presupuesto": "¿Cuál es tu presupuesto anual?",
       "presupuestoHelp": "Esta pregunta se refiere a cuánto dinero estás dispuesto a pagar en un año por tus estudios, incluyendo matrícula y otros gastos asociados.",
       "lugar": "¿Dónde te gustaría estudiar?",
@@ -73,7 +76,9 @@
       "Online": "Online",
       "Semipresencial": "Semipresencial",
       "Público": "Público",
-      "Privado": "Privado"
+      "Privado": "Privado",
+      "Carrera Universitaria": "Carrera Universitaria",
+      "Máster": "Máster"
     }
   },
   "sectors": {
@@ -91,6 +96,7 @@
       "location": "Localización",
       "entity": "Entidad y programa",
       "rating": "Valoración",
+      "duration": "Duración",
       "experience": "Experiencia laboral",
       "comment": "Comentario para otros usuarios"
     },
@@ -108,8 +114,12 @@
       "dropout": "¿Qué nivel de abandono percibes?",
       "employability": "¿Cómo ves la salida laboral?",
       "investment": "Precio o inversión anual aproximada (€)",
+      "officialDuration": "Duración oficial (años)",
+      "myDuration": "Tiempo que tardé yo (años)",
       "stress": "Nivel de estrés",
-      "keyInfo": "Información clave"
+      "keyInfo": "Información clave",
+      "programLink": "Link del programa",
+      "centerLink": "Link del centro/universidad"
     },
     "placeholders": {
       "country": "Selecciona un país",
@@ -123,6 +133,7 @@
       "format": "Selecciona un formato",
       "requirements": "Ej: 12.5 / Entrevista + Portfolio",
       "investment": "Ej: 8000",
+      "years": "Ej: 1.5",
       "comment": "Cuéntanos sobre la calidad de los profesores, si es muy teórico o práctico, y si los contactos que haces valen la pena",
       "company": "Empresa",
       "role": "Puesto / Rol",
