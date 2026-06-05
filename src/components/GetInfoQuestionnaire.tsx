@@ -216,6 +216,10 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
       delete newAnswers.ciudadInternacional;
     }
     if (current.key === "sectorAcademico" && answers.sectorAcademico !== value) {
+      delete newAnswers.tipoEstudio;
+      delete newAnswers.masterBuscado;
+    }
+    if (current.key === "tipoEstudio" && answers.tipoEstudio !== value) {
       delete newAnswers.masterBuscado;
     }
     setAnswers(newAnswers);
