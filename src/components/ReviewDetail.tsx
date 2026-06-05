@@ -1,4 +1,4 @@
-import { ArrowLeft, MapPin, Building2, BookOpen, Monitor, Languages, Clock, Euro, BarChart3, Users, Briefcase, Target, DollarSign, MessageSquare, Heart, GraduationCap, Handshake, Star, BookHeart } from "lucide-react";
+import { ArrowLeft, MapPin, Building2, BookOpen, Monitor, Languages, Clock, Euro, BarChart3, Users, Briefcase, Target, DollarSign, MessageSquare, Heart, GraduationCap, Handshake, Star, BookHeart, ExternalLink, Link as LinkIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Review } from "@/data/mockReviews";
 import { useReviewLikes } from "@/hooks/useReviewLikes";
@@ -14,6 +14,8 @@ interface ReviewDetailProps {
   masterName: string;
   /** Centro/universidad seleccionado en el nivel 2. Opcional. */
   centerName?: string;
+  /** Duración media (años) calculada a partir de las reseñas del programa. */
+  tiempoMedio?: number | null;
   onBack: () => void;
 }
 
@@ -38,7 +40,7 @@ const InfoItem = ({ icon: Icon, label, value }: { icon: React.ElementType; label
   </div>
 );
 
-const ReviewDetail = ({ review, masterName, centerName, onBack }: ReviewDetailProps) => {
+const ReviewDetail = ({ review, masterName, centerName, tiempoMedio, onBack }: ReviewDetailProps) => {
   const { t, i18n } = useTranslation();
   const { getLikes, hasLiked, toggleLike } = useReviewLikes();
   const { translate, clear, getTranslation, isLoading } = useReviewTranslation();
@@ -120,8 +122,17 @@ const ReviewDetail = ({ review, masterName, centerName, onBack }: ReviewDetailPr
             <h3 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-5">
               <Clock className="h-5 w-5 text-primary" /> {t("reviews.blocks.inversion")}
             </h3>
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
               <InfoItem icon={Clock} label={t("reviews.fields.totalDuration")} value={review.duracion} />
+              <InfoItem
+                icon={Clock}
+                label={t("reviews.fields.avgDuration")}
+                value={
+                  typeof tiempoMedio === "number"
+                    ? t("reviews.fields.yearsValue", { value: Number(tiempoMedio.toFixed(1)) })
+                    : t("reviews.fields.noDataYet")
+                }
+              />
               <InfoItem icon={Euro} label={t("reviews.fields.annualPrice")} value={review.precioAnual} />
             </div>
           </div>
