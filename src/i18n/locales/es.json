@@ -254,7 +254,12 @@
       "valor": "Valor Añadido",
       "resultados": "Resultados y Empleabilidad",
       "dafo": "Análisis DAFO",
-      "comentario": "Comentario del Usuario"
+      "comentario": "Comentario del Usuario",
+      "oficial": "Información oficial"
+    },
+    "actions": {
+      "goToProgram": "Ir al programa oficial",
+      "goToCenter": "Ir al centro/universidad"
     },
     "fields": {
       "specialty": "Especialidad",
@@ -263,6 +268,9 @@
       "format": "Formato",
       "languages": "Idiomas",
       "totalDuration": "Duración total",
+      "avgDuration": "Duración media",
+      "yearsValue": "{{value}} años",
+      "noDataYet": "Sin datos aún",
       "annualPrice": "Precio anual",
       "difficulty": "Nivel de dificultad",
       "attendance": "Asistencia",
