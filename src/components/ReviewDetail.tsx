@@ -322,6 +322,37 @@ const ReviewDetail = ({ review, masterName, centerName, tiempoMedio, onBack }: R
               <p className="text-xs text-muted-foreground mt-3">— {review.userName}</p>
             </div>
           </div>
+
+          {/* Bloque 7: Información oficial */}
+          {(review.linkPrograma || review.linkCentro) && (
+            <div className="bg-card rounded-2xl p-6 border border-border">
+              <h3 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-5">
+                <LinkIcon className="h-5 w-5 text-primary" /> {t("reviews.blocks.oficial")}
+              </h3>
+              <div className="flex flex-col sm:flex-row gap-3">
+                {review.linkPrograma && (
+                  <a
+                    href={review.linkPrograma}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium px-4 py-2.5 hover:opacity-90 transition-opacity"
+                  >
+                    <ExternalLink className="h-4 w-4" /> {t("reviews.actions.goToProgram")}
+                  </a>
+                )}
+                {review.linkCentro && (
+                  <a
+                    href={review.linkCentro}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-background text-foreground text-sm font-medium px-4 py-2.5 hover:bg-accent transition-colors"
+                  >
+                    <ExternalLink className="h-4 w-4" /> {t("reviews.actions.goToCenter")}
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>
