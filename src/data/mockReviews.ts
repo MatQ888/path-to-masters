@@ -13,6 +13,12 @@ export interface Review {
   formato: string;
   idiomas: string;
   duracion: string;
+  /** Tiempo real que tardó el usuario en completarlo (años, decimal). Opcional. */
+  tiempoReal?: number;
+  /** Link oficial del programa. Opcional. */
+  linkPrograma?: string;
+  /** Link oficial del centro o universidad. Opcional. */
+  linkCentro?: string;
   precioAnual: string;
   dificultad: string;
   asistencia: string;
