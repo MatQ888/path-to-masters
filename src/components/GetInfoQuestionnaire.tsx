@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { sectorOptions, searchMasters } from "@/data/masterSuggestions";
+import { searchCarreras } from "@/data/carrerasSuggestions";
 import { CCAA, getProvincesByCCAA, COUNTRIES } from "@/data/locations";
 import { tCcaaByName, tCountryByName, tProvince, tQuestionnaireOption } from "@/lib/i18nData";
 
