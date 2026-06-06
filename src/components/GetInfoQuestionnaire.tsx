@@ -171,8 +171,9 @@ const GetInfoQuestionnaire = ({ onComplete, onBack }: GetInfoQuestionnaireProps)
 
   const masterSuggestions = useMemo(() => {
     if (!current || current.type !== "masterSearch") return [];
-    return searchMasters(answers.sectorAcademico || "", masterSearchText);
-  }, [current, answers.sectorAcademico, masterSearchText]);
+    const fn = answers.tipoEstudio === "Carrera Universitaria" ? searchCarreras : searchMasters;
+    return fn(answers.sectorAcademico || "", masterSearchText);
+  }, [current, answers.sectorAcademico, answers.tipoEstudio, masterSearchText]);
 
   if (!current) return null;
 
