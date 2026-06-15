@@ -222,6 +222,10 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
         estres: form.estres,
         experiencia: form.experiencia,
         comentarios: form.comentarios,
+        duracion_oficial: form.duracionOficial ? parseFloat(form.duracionOficial) : null,
+        tiempo_real: form.tiempoReal ? parseFloat(form.tiempoReal) : null,
+        link_programa: form.linkPrograma,
+        link_centro: form.linkCentro,
         published_at: publishedAt,
       }, { onConflict: 'user_id' });
 
