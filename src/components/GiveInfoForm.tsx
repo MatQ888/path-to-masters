@@ -204,7 +204,7 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
     const { data: { user } } = await supabase.auth.getUser();
     
     if (user) {
-      const { error } = await supabase.from('reviews').upsert({
+      const { error } = await supabase.from('reviews').insert({
         user_id: user.id,
         apodo: apodo ?? "",
         pais: form.pais,
@@ -227,7 +227,7 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
         link_programa: form.linkPrograma,
         link_centro: form.linkCentro,
         published_at: publishedAt,
-      }, { onConflict: 'user_id' });
+      });
 
       if (error) {
         console.error(error);
