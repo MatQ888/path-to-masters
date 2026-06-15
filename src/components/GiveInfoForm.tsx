@@ -1,4 +1,6 @@
 import { useState, useMemo } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { tCountryByCode, tCcaaByCode, tProvince, tSpecialty, tFormat, tQuestionnaireOption } from "@/lib/i18nData";
@@ -194,10 +196,43 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
       experiencia: p.experiencia.filter((e) => e.id !== id),
     }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Update published date on every submit (creation or update)
-    setForm((p) => ({ ...p, publishedAt: new Date().toISOString() }));
+    
+    const publishedAt = new Date().toISOString();
+
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (user) {
+      const { error } = await supabase.from('reviews').upsert({
+        user_id: user.id,
+        apodo: apodo ?? "",
+        pais: form.pais,
+        ccaa: form.ccaa,
+        ciudad: form.ciudad,
+        centro: form.centro,
+        programa: form.programa,
+        especialidad: form.especialidad,
+        sector: form.sector,
+        formato: form.formato,
+        requisitos: form.requisitos,
+        abandono: form.abandono,
+        empleabilidad: form.empleabilidad,
+        inversion: form.inversion ? parseFloat(form.inversion) : null,
+        estres: form.estres,
+        experiencia: form.experiencia,
+        comentarios: form.comentarios,
+        published_at: publishedAt,
+      }, { onConflict: 'user_id' });
+
+      if (error) {
+        console.error(error);
+        toast.error("Error al guardar la información");
+        return;
+      }
+    }
+
+    setForm((p) => ({ ...p, publishedAt }));
     setSubmitted(true);
   };
 
