@@ -86,6 +86,8 @@ interface FormState {
   programa: string;
   sector: string;
   formato: string;
+  idiomas: string;
+  asistencia: string;
   requisitos: string;
   abandono: number;
   empleabilidad: number;
@@ -109,6 +111,8 @@ const initialForm: FormState = {
   programa: "",
   sector: "",
   formato: "",
+  idiomas: "",
+  asistencia: "",
   requisitos: "",
   abandono: -1,
   empleabilidad: -1,
@@ -215,6 +219,8 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
         especialidad: form.especialidad,
         sector: form.sector,
         formato: form.formato,
+        idiomas: form.idiomas,
+        asistencia: form.asistencia,
         requisitos: form.requisitos,
         abandono: form.abandono,
         empleabilidad: form.empleabilidad,
@@ -357,6 +363,36 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
                 emptyMessage={t("common.noResults")}
               />
             </FieldWrapper>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FieldWrapper label="Idiomas del programa">
+                <Select value={form.idiomas} onValueChange={(v) => update("idiomas", v)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona el idioma principal" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Español">Español</SelectItem>
+                    <SelectItem value="Inglés">Inglés</SelectItem>
+                    <SelectItem value="Español e Inglés">Español e Inglés</SelectItem>
+                    <SelectItem value="Otro">Otro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FieldWrapper>
+
+              <FieldWrapper label="Asistencia">
+                <Select value={form.asistencia} onValueChange={(v) => update("asistencia", v)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona el tipo de asistencia" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Obligatoria (90%)">Obligatoria (90%)</SelectItem>
+                    <SelectItem value="Obligatoria (80%)">Obligatoria (80%)</SelectItem>
+                    <SelectItem value="Recomendada">Recomendada</SelectItem>
+                    <SelectItem value="Flexible">Flexible</SelectItem>
+                    <SelectItem value="No requerida">No requerida</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FieldWrapper>
+            </div>
 
             {form.pais === "ES" && (
               <FieldWrapper label={t("giveForm.labels.ccaa")}>
