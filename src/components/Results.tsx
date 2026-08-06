@@ -1,50 +1,56 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { MapPin, Euro, Building2, ArrowLeft, Clock } from "lucide-react";
-import { mockReviewsByMaster, Review } from "@/data/mockReviews";
-import { getCentersForMaster, MasterCenter } from "@/data/mockCenters";
+import { MapPin, Euro, Building2, ArrowLeft, Clock, Loader2 } from "lucide-react";
+import { Review } from "@/data/mockReviews";
+import { MasterCenter } from "@/data/mockCenters";
 import CentersListing from "@/components/CentersListing";
 import ReviewsListing from "@/components/ReviewsListing";
 import ReviewDetail from "@/components/ReviewDetail";
 import { tQuestionnaireOption } from "@/lib/i18nData";
+import { useReviews, groupByPrograma, groupByCentro } from "@/hooks/useReviews";
+import { summarizeReviews, computeCompanyStats, supabaseReviewToReview, ReviewSummary } from "@/lib/reviewAdapter";
 
 interface ResultsProps {
   answers: Record<string, string>;
   onBack: () => void;
 }
 
-const mockMasters = [
-  { name: "Máster en Data Science", location: "Madrid, España", price: "4.500 €", type: "Público", duration: "1 año" },
-  { name: "Máster en Inteligencia Artificial", location: "Barcelona, España", price: "8.900 €", type: "Privado", duration: "2 años" },
-  { name: "Máster en Marketing Digital", location: "Valencia, España", price: "3.200 €", type: "Público", duration: "1 año" },
-  { name: "Máster en Finanzas Internacionales", location: "Lisboa, Portugal", price: "6.000 €", type: "Privado", duration: "1,5 años" },
-  { name: "Máster en Ingeniería de Software", location: "Sevilla, España", price: "4.800 €", type: "Público", duration: "2 años" },
-  { name: "Máster en Gestión Empresarial", location: "Múnich, Alemania", price: "12.000 €", type: "Privado", duration: "2 años" },
-];
-
 type View = "list" | "centers" | "reviews" | "detail";
+
+interface ProgramCard extends ReviewSummary {
+  name: string;
+}
 
 const Results = ({ answers, onBack }: ResultsProps) => {
   const { t } = useTranslation();
+  const { reviews, loading, error } = useReviews();
   const [view, setView] = useState<View>("list");
   const [selectedMasterName, setSelectedMasterName] = useState<string>("");
   const [selectedCenter, setSelectedCenter] = useState<MasterCenter | null>(null);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
 
-  const isPublic = answers.sector === "Público";
-  const filtered = mockMasters.filter((m) =>
-    isPublic ? m.type === "Público" : m.type === "Privado"
-  );
-  const results = filtered.length > 0 ? filtered : mockMasters.slice(0, 3);
+  const sectorFilter = answers.sectorPublicoPrivado;
+
+  // Nivel 1: una tarjeta por programa, agregando sus reseñas.
+  const programCards = useMemo<ProgramCard[]>(() => {
+    const groups = groupByPrograma(reviews);
+    return Object.entries(groups).map(([programa, revs]) => ({
+      name: programa,
+      ...summarizeReviews(revs, sectorFilter),
+    }));
+  }, [reviews, sectorFilter]);
+
+  const filteredCards = sectorFilter
+    ? programCards.filter((c) => c.type === sectorFilter)
+    : programCards;
+  const results = filteredCards.length > 0 ? filteredCards : programCards.slice(0, 3);
 
   // Nivel 1 → Nivel 2: del listado de másters al listado de centros.
-  const handleViewMore = (masterName: string, fallback: typeof mockMasters[number]) => {
+  const handleViewMore = (masterName: string) => {
     setSelectedMasterName(masterName);
     setSelectedCenter(null);
     setView("centers");
-    // Pre-cargamos el fallback para getCentersForMaster si fuese necesario.
-    void fallback;
   };
 
   // Nivel 2 → Nivel 3: del centro elegido al listado de opiniones.
@@ -58,11 +64,33 @@ const Results = ({ answers, onBack }: ResultsProps) => {
     setView("detail");
   };
 
+  if (loading) {
+    return (
+      <section className="min-h-screen bg-secondary/50 py-20 flex items-center justify-center">
+        <div className="flex items-center gap-3 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          <span>{t("common.loading")}</span>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="min-h-screen bg-secondary/50 py-20">
+        <div className="container mx-auto px-4 max-w-3xl text-center space-y-4">
+          <p className="text-muted-foreground">{error}</p>
+          <Button variant="outline" onClick={onBack}>{t("common.back")}</Button>
+        </div>
+      </section>
+    );
+  }
+
   // Nivel 3 (detalle de una reseña).
   if (view === "detail" && selectedReview) {
-    const allReviews = mockReviewsByMaster[selectedMasterName] || [];
-    const tiempos = allReviews
-      .map((r) => r.tiempoReal)
+    const programReviews = reviews.filter((r) => r.programa === selectedMasterName);
+    const tiempos = programReviews
+      .map((r) => r.tiempo_real)
       .filter((v): v is number => typeof v === "number" && v > 0);
     const tiempoMedio =
       tiempos.length > 0
@@ -84,7 +112,12 @@ const Results = ({ answers, onBack }: ResultsProps) => {
 
   // Nivel 3 (listado de opiniones del centro elegido).
   if (view === "reviews") {
-    const reviews = mockReviewsByMaster[selectedMasterName] || [];
+    const programReviews = reviews.filter((r) => r.programa === selectedMasterName);
+    const centerReviews = programReviews.filter((r) => r.centro === selectedCenter?.name);
+    // % de empresas calculado sobre TODAS las reseñas del programa, no solo
+    // las del centro, para que se actualice solo según entren más reseñas.
+    const companies = computeCompanyStats(programReviews);
+    const adaptedReviews = centerReviews.map((r) => supabaseReviewToReview(r, companies));
     const cleanName = selectedMasterName.replace(/^M[áa]ster en\s*/i, "").trim();
     const headingName = selectedCenter
       ? `Máster en ${cleanName} en ${selectedCenter.name}`
@@ -92,7 +125,7 @@ const Results = ({ answers, onBack }: ResultsProps) => {
     return (
       <ReviewsListing
         masterName={headingName}
-        reviews={reviews}
+        reviews={adaptedReviews}
         onBack={() => setView("centers")}
         onSelectReview={handleSelectReview}
       />
@@ -101,8 +134,12 @@ const Results = ({ answers, onBack }: ResultsProps) => {
 
   // Nivel 2: listado de centros.
   if (view === "centers") {
-    const fallback = results.find((m) => m.name === selectedMasterName);
-    const centers = getCentersForMaster(selectedMasterName, fallback);
+    const programReviews = reviews.filter((r) => r.programa === selectedMasterName);
+    const centerGroups = groupByCentro(programReviews);
+    const centers: MasterCenter[] = Object.entries(centerGroups).map(([centro, revs]) => ({
+      name: centro,
+      ...summarizeReviews(revs),
+    }));
     return (
       <CentersListing
         masterName={selectedMasterName}
@@ -123,7 +160,7 @@ const Results = ({ answers, onBack }: ResultsProps) => {
         <div className="text-center space-y-3 mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">{t("results.title")}</h2>
           <p className="text-muted-foreground text-lg">
-            {t("results.subtitleBase")} {answers.presupuesto} · {tQuestionnaireOption(answers.lugar || "")} · {tQuestionnaireOption(answers.sector || "")}
+            {t("results.subtitleBase")} {answers.presupuesto} · {tQuestionnaireOption(answers.lugar || "")} · {tQuestionnaireOption(answers.sectorPublicoPrivado || "")}
           </p>
         </div>
 
@@ -143,13 +180,19 @@ const Results = ({ answers, onBack }: ResultsProps) => {
                 <Button
                   variant="cta"
                   className="rounded-xl shrink-0"
-                  onClick={() => handleViewMore(master.name, master)}
+                  onClick={() => handleViewMore(master.name)}
                 >
                   {t("results.viewMore")}
                 </Button>
               </div>
             </div>
           ))}
+
+          {results.length === 0 && (
+            <div className="text-center py-16 text-muted-foreground">
+              <p>{t("common.noResults")}</p>
+            </div>
+          )}
         </div>
 
         <div className="text-center mt-12">
