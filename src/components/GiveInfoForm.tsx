@@ -61,7 +61,7 @@ const abandonoLevels = [
   "Muy alto (Muchos dejan el camino)",
 ];
 
-const empleabilidadLevels = [
+export const empleabilidadLevels = [
   "Muy difícil",
   "Difícil",
   "Normal",
