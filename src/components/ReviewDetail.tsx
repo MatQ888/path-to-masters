@@ -196,83 +196,95 @@ const ReviewDetail = ({ review, masterName, centerName, tiempoMedio, onBack }: R
             </div>
 
             {/* Companies */}
-            <p className="text-sm font-medium text-foreground mb-3 flex items-center gap-1.5">
-              <Briefcase className="h-4 w-4 text-primary" /> {t("reviews.fields.companyOpportunities")}
-            </p>
-            <div className="space-y-2.5 mb-6">
-              {review.companies.map((c, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <span className="text-sm w-28 shrink-0 truncate">{c.name}</span>
-                  <div className="flex-1 bg-secondary rounded-full h-5 overflow-hidden">
-                    <div
-                      className="bg-primary h-full rounded-full flex items-center justify-end pr-2 transition-all"
-                      style={{ width: `${c.percent}%` }}
-                    >
-                      {c.percent >= 15 && (
-                        <span className="text-xs font-bold text-primary-foreground">{c.percent}%</span>
-                      )}
+            {review.companies.length > 0 && (
+              <>
+                <p className="text-sm font-medium text-foreground mb-3 flex items-center gap-1.5">
+                  <Briefcase className="h-4 w-4 text-primary" /> {t("reviews.fields.companyOpportunities")}
+                </p>
+                <div className="space-y-2.5 mb-6">
+                  {review.companies.map((c, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <span className="text-sm w-28 shrink-0 truncate">{c.name}</span>
+                      <div className="flex-1 bg-secondary rounded-full h-5 overflow-hidden">
+                        <div
+                          className="bg-primary h-full rounded-full flex items-center justify-end pr-2 transition-all"
+                          style={{ width: `${c.percent}%` }}
+                        >
+                          {c.percent >= 15 && (
+                            <span className="text-xs font-bold text-primary-foreground">{c.percent}%</span>
+                          )}
+                        </div>
+                      </div>
+                      {c.percent < 15 && <span className="text-xs font-medium text-muted-foreground">{c.percent}%</span>}
                     </div>
-                  </div>
-                  {c.percent < 15 && <span className="text-xs font-medium text-muted-foreground">{c.percent}%</span>}
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            )}
 
-            {/* Salary */}
-            <p className="text-sm font-medium text-foreground mb-3 flex items-center gap-1.5">
-              <DollarSign className="h-4 w-4 text-primary" /> {t("reviews.fields.avgSalary")}
-            </p>
-            <div className="grid grid-cols-3 gap-3">
-              <div className="bg-secondary/40 rounded-xl p-3 text-center">
-                <p className="text-xs text-muted-foreground mb-0.5">{t("reviews.fields.beginner")}</p>
-                <p className="text-lg font-bold text-foreground">{review.salary.beginner.toLocaleString()} €</p>
-                <p className="text-xs text-muted-foreground">{t("reviews.fields.perMonth")}</p>
-              </div>
-              <div className="bg-secondary/40 rounded-xl p-3 text-center">
-                <p className="text-xs text-muted-foreground mb-0.5">{t("reviews.fields.mid")}</p>
-                <p className="text-lg font-bold text-foreground">{review.salary.mid.toLocaleString()} €</p>
-                <p className="text-xs text-muted-foreground">{t("reviews.fields.perMonth")}</p>
-              </div>
-              <div className="bg-secondary/40 rounded-xl p-3 text-center">
-                <p className="text-xs text-muted-foreground mb-0.5">{t("reviews.fields.senior")}</p>
-                <p className="text-lg font-bold text-foreground">{review.salary.advance.toLocaleString()} €</p>
-                <p className="text-xs text-muted-foreground">{t("reviews.fields.perMonth")}</p>
-              </div>
-            </div>
+            {/* Salary: solo si hay datos reales (no se recogen en el formulario aún) */}
+            {(review.salary.beginner > 0 || review.salary.mid > 0 || review.salary.advance > 0) && (
+              <>
+                <p className="text-sm font-medium text-foreground mb-3 flex items-center gap-1.5">
+                  <DollarSign className="h-4 w-4 text-primary" /> {t("reviews.fields.avgSalary")}
+                </p>
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-secondary/40 rounded-xl p-3 text-center">
+                    <p className="text-xs text-muted-foreground mb-0.5">{t("reviews.fields.beginner")}</p>
+                    <p className="text-lg font-bold text-foreground">{review.salary.beginner.toLocaleString()} €</p>
+                    <p className="text-xs text-muted-foreground">{t("reviews.fields.perMonth")}</p>
+                  </div>
+                  <div className="bg-secondary/40 rounded-xl p-3 text-center">
+                    <p className="text-xs text-muted-foreground mb-0.5">{t("reviews.fields.mid")}</p>
+                    <p className="text-lg font-bold text-foreground">{review.salary.mid.toLocaleString()} €</p>
+                    <p className="text-xs text-muted-foreground">{t("reviews.fields.perMonth")}</p>
+                  </div>
+                  <div className="bg-secondary/40 rounded-xl p-3 text-center">
+                    <p className="text-xs text-muted-foreground mb-0.5">{t("reviews.fields.senior")}</p>
+                    <p className="text-lg font-bold text-foreground">{review.salary.advance.toLocaleString()} €</p>
+                    <p className="text-xs text-muted-foreground">{t("reviews.fields.perMonth")}</p>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
-          {/* DAFO */}
-          <div className="bg-card rounded-2xl p-6 border border-border">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-4">
-              <Target className="h-5 w-5 text-primary" /> {t("reviews.blocks.dafo")}
-            </h3>
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="bg-green-500/10 rounded-xl p-4">
-                <h4 className="font-semibold text-sm mb-2">{t("reviews.fields.strengths")}</h4>
-                <ul className="space-y-1">
-                  {review.dafo.fortalezas.map((f, i) => (
-                    <li key={i} className="text-sm text-muted-foreground">• {f}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="bg-red-500/10 rounded-xl p-4">
-                <h4 className="font-semibold text-sm mb-2">{t("reviews.fields.weaknesses")}</h4>
-                <ul className="space-y-1">
-                  {review.dafo.debilidades.map((d, i) => (
-                    <li key={i} className="text-sm text-muted-foreground">• {d}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="bg-blue-500/10 rounded-xl p-4">
-                <h4 className="font-semibold text-sm mb-2">{t("reviews.fields.opportunities")}</h4>
-                <ul className="space-y-1">
-                  {review.dafo.oportunidades.map((o, i) => (
-                    <li key={i} className="text-sm text-muted-foreground">• {o}</li>
-                  ))}
-                </ul>
+          {/* DAFO: se ocultará hasta que exista análisis estadístico real entre reseñas */}
+          {(review.dafo.fortalezas.length > 0 ||
+            review.dafo.debilidades.length > 0 ||
+            review.dafo.oportunidades.length > 0) && (
+            <div className="bg-card rounded-2xl p-6 border border-border">
+              <h3 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-4">
+                <Target className="h-5 w-5 text-primary" /> {t("reviews.blocks.dafo")}
+              </h3>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="bg-green-500/10 rounded-xl p-4">
+                  <h4 className="font-semibold text-sm mb-2">{t("reviews.fields.strengths")}</h4>
+                  <ul className="space-y-1">
+                    {review.dafo.fortalezas.map((f, i) => (
+                      <li key={i} className="text-sm text-muted-foreground">• {f}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bg-red-500/10 rounded-xl p-4">
+                  <h4 className="font-semibold text-sm mb-2">{t("reviews.fields.weaknesses")}</h4>
+                  <ul className="space-y-1">
+                    {review.dafo.debilidades.map((d, i) => (
+                      <li key={i} className="text-sm text-muted-foreground">• {d}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bg-blue-500/10 rounded-xl p-4">
+                  <h4 className="font-semibold text-sm mb-2">{t("reviews.fields.opportunities")}</h4>
+                  <ul className="space-y-1">
+                    {review.dafo.oportunidades.map((o, i) => (
+                      <li key={i} className="text-sm text-muted-foreground">• {o}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Bloque 6: Comentario del Usuario */}
           <div className="bg-card rounded-2xl p-6 border border-border">

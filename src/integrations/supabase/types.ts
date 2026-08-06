@@ -62,6 +62,101 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          abandono: number | null
+          apodo: string | null
+          asistencia: string | null
+          ccaa: string | null
+          centro: string | null
+          ciudad: string | null
+          comentarios: string | null
+          created_at: string | null
+          duracion_oficial: number | null
+          empleabilidad: number | null
+          especialidad: string | null
+          estres: number | null
+          experiencia: Json | null
+          formato: string | null
+          id: string
+          idiomas: string | null
+          inversion: number | null
+          link_centro: string | null
+          link_programa: string | null
+          pais: string | null
+          programa: string | null
+          published_at: string | null
+          requisitos: string | null
+          sector: string | null
+          tiempo_real: number | null
+          user_id: string | null
+        }
+        Insert: {
+          abandono?: number | null
+          apodo?: string | null
+          asistencia?: string | null
+          ccaa?: string | null
+          centro?: string | null
+          ciudad?: string | null
+          comentarios?: string | null
+          created_at?: string | null
+          duracion_oficial?: number | null
+          empleabilidad?: number | null
+          especialidad?: string | null
+          estres?: number | null
+          experiencia?: Json | null
+          formato?: string | null
+          id?: string
+          idiomas?: string | null
+          inversion?: number | null
+          link_centro?: string | null
+          link_programa?: string | null
+          pais?: string | null
+          programa?: string | null
+          published_at?: string | null
+          requisitos?: string | null
+          sector?: string | null
+          tiempo_real?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          abandono?: number | null
+          apodo?: string | null
+          asistencia?: string | null
+          ccaa?: string | null
+          centro?: string | null
+          ciudad?: string | null
+          comentarios?: string | null
+          created_at?: string | null
+          duracion_oficial?: number | null
+          empleabilidad?: number | null
+          especialidad?: string | null
+          estres?: number | null
+          experiencia?: Json | null
+          formato?: string | null
+          id?: string
+          idiomas?: string | null
+          inversion?: number | null
+          link_centro?: string | null
+          link_programa?: string | null
+          pais?: string | null
+          programa?: string | null
+          published_at?: string | null
+          requisitos?: string | null
+          sector?: string | null
+          tiempo_real?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
