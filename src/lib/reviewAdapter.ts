@@ -15,6 +15,24 @@ export interface CompanyStat {
   percent: number;
 }
 
+interface AnswerFilter {
+  test: (review: SupabaseReview) => boolean;
+}
+
+// answers.sectorAcademico (id de sectorOptions) -> SupabaseReview.especialidad
+const especialidadBySector: Record<string, string> = {
+  ingenieria: "Ingeniería y Tecnología",
+  sociales: "Ciencias sociales y jurídicas",
+  artes: "Artes y humanidades",
+  salud: "Ciencias de la salud",
+};
+
+// answers.tipoEstudio -> prefijo esperado en SupabaseReview.programa
+const programaPrefixByTipo: Record<string, string> = {
+  "Carrera Universitaria": "Grado en",
+  "Máster": "Máster en",
+};
+
 // Genera un id numérico estable a partir del uuid de Supabase, ya que
 // Review.id es number pero las filas reales usan uuid (string).
 const hashId = (id: string): number => {
@@ -126,4 +144,62 @@ export const supabaseReviewToReview = (sr: SupabaseReview, companies: CompanySta
     salary: { beginner: 0, mid: 0, advance: 0 },
     dafo: { fortalezas: [], debilidades: [], oportunidades: [] },
   };
+};
+
+/**
+ * Filtra las reseñas según las respuestas del cuestionario "Obtener
+ * información", por orden de prioridad (de más a menos importante):
+ * masterBuscado > sectorAcademico > tipoEstudio > sectorPublicoPrivado >
+ * formatoEstudio > lugar. Solo se activan los filtros cuya respuesta está
+ * presente.
+ *
+ * Si aplicar todos los filtros activos da 0 resultados, se relaja quitando
+ * el filtro de menor prioridad y se reintenta, hasta encontrar resultados o
+ * quedarse sin filtros (en cuyo caso se devuelven todas las reseñas en vez
+ * de una pantalla vacía).
+ */
+export const filterReviewsByAnswers = (
+  reviews: SupabaseReview[],
+  answers: Record<string, string>,
+): SupabaseReview[] => {
+  const filters: AnswerFilter[] = [];
+
+  if (answers.masterBuscado) {
+    const programa = answers.masterBuscado;
+    filters.push({ test: (r) => r.programa === programa });
+  }
+
+  if (answers.sectorAcademico) {
+    const especialidad = especialidadBySector[answers.sectorAcademico];
+    if (especialidad) filters.push({ test: (r) => r.especialidad === especialidad });
+  }
+
+  if (answers.tipoEstudio) {
+    const prefix = programaPrefixByTipo[answers.tipoEstudio];
+    if (prefix) filters.push({ test: (r) => !!r.programa?.startsWith(prefix) });
+  }
+
+  if (answers.sectorPublicoPrivado) {
+    const sector = answers.sectorPublicoPrivado;
+    filters.push({ test: (r) => r.sector === sector });
+  }
+
+  if (answers.formatoEstudio) {
+    const formato = answers.formatoEstudio;
+    filters.push({ test: (r) => r.formato === formato });
+  }
+
+  if (answers.lugar === "Nacional") {
+    filters.push({ test: (r) => r.pais === "ES" });
+  } else if (answers.lugar === "Internacional") {
+    filters.push({ test: (r) => !!r.pais && r.pais !== "ES" });
+  }
+
+  for (let activeCount = filters.length; activeCount > 0; activeCount--) {
+    const active = filters.slice(0, activeCount);
+    const matched = reviews.filter((r) => active.every((f) => f.test(r)));
+    if (matched.length > 0) return matched;
+  }
+
+  return reviews;
 };

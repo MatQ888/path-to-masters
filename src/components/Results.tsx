@@ -9,7 +9,13 @@ import ReviewsListing from "@/components/ReviewsListing";
 import ReviewDetail from "@/components/ReviewDetail";
 import { tQuestionnaireOption } from "@/lib/i18nData";
 import { useReviews, groupByPrograma, groupByCentro } from "@/hooks/useReviews";
-import { summarizeReviews, computeCompanyStats, supabaseReviewToReview, ReviewSummary } from "@/lib/reviewAdapter";
+import {
+  summarizeReviews,
+  computeCompanyStats,
+  supabaseReviewToReview,
+  filterReviewsByAnswers,
+  ReviewSummary,
+} from "@/lib/reviewAdapter";
 
 interface ResultsProps {
   answers: Record<string, string>;
@@ -30,21 +36,22 @@ const Results = ({ answers, onBack }: ResultsProps) => {
   const [selectedCenter, setSelectedCenter] = useState<MasterCenter | null>(null);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
 
-  const sectorFilter = answers.sectorPublicoPrivado;
+  // Reseñas que cumplen las respuestas del cuestionario, con relajación
+  // progresiva de prioridad (ver filterReviewsByAnswers). Nunca queda vacío
+  // salvo que `reviews` en sí esté vacío.
+  const filteredReviews = useMemo(
+    () => filterReviewsByAnswers(reviews, answers),
+    [reviews, answers],
+  );
 
-  // Nivel 1: una tarjeta por programa, agregando sus reseñas.
-  const programCards = useMemo<ProgramCard[]>(() => {
-    const groups = groupByPrograma(reviews);
+  // Nivel 1: una tarjeta por programa, agregando las reseñas ya filtradas.
+  const results = useMemo<ProgramCard[]>(() => {
+    const groups = groupByPrograma(filteredReviews);
     return Object.entries(groups).map(([programa, revs]) => ({
       name: programa,
-      ...summarizeReviews(revs, sectorFilter),
+      ...summarizeReviews(revs, answers.sectorPublicoPrivado),
     }));
-  }, [reviews, sectorFilter]);
-
-  const filteredCards = sectorFilter
-    ? programCards.filter((c) => c.type === sectorFilter)
-    : programCards;
-  const results = filteredCards.length > 0 ? filteredCards : programCards.slice(0, 3);
+  }, [filteredReviews, answers.sectorPublicoPrivado]);
 
   // Nivel 1 → Nivel 2: del listado de másters al listado de centros.
   const handleViewMore = (masterName: string) => {
