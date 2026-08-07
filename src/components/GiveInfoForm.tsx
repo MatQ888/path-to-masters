@@ -187,16 +187,28 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
     [i18n.language],
   );
 
-  // Grado/Máster options filtered by the chosen especialidad's sector id
+  // Grado/Máster options filtered by the chosen especialidad's sector id.
+  // Sin especialidad todavía (aparece más abajo en el formulario), mostramos
+  // el listado completo de todos los sectores en vez de una lista vacía.
   const sectorId = especialidadToSectorId[form.especialidad] || "";
-  const carreraOptions: ComboboxOption[] = useMemo(
-    () => (carrerasBySector[sectorId] || []).map((name) => ({ value: name, label: name })),
-    [sectorId],
-  );
-  const masterOptions: ComboboxOption[] = useMemo(
-    () => (mastersBySector[sectorId] || []).map((name) => ({ value: name, label: name })),
-    [sectorId],
-  );
+  const carreraOptions: ComboboxOption[] = useMemo(() => {
+    const names = sectorId ? carrerasBySector[sectorId] || [] : Object.values(carrerasBySector).flat();
+    return names.map((name) => ({ value: name, label: name }));
+  }, [sectorId]);
+  const masterOptions: ComboboxOption[] = useMemo(() => {
+    const names = sectorId ? mastersBySector[sectorId] || [] : Object.values(mastersBySector).flat();
+    return names.map((name) => ({ value: name, label: name }));
+  }, [sectorId]);
+
+  if (import.meta.env.DEV) {
+    // eslint-disable-next-line no-console
+    console.debug("[GiveInfoForm] tipoPrograma options", {
+      especialidad: form.especialidad,
+      sectorId,
+      carreraOptionsCount: carreraOptions.length,
+      masterOptionsCount: masterOptions.length,
+    });
+  }
 
   const handleTipoProgramaChange = (value: string) =>
     setForm((prev) => ({ ...prev, tipoPrograma: value as TipoPrograma, programa: "" }));
