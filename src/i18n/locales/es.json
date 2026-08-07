@@ -121,6 +121,11 @@
       "programLink": "Link del programa",
       "centerLink": "Link del centro/universidad"
     },
+    "programTabs": {
+      "grado": "Grado universitario",
+      "master": "Máster",
+      "trabajo": "Puesto de trabajo"
+    },
     "placeholders": {
       "country": "Selecciona un país",
       "ccaa": "Selecciona una CC.AA.",
@@ -128,6 +133,7 @@
       "city": "Escribe la ciudad",
       "entity": "Busca por nombre o siglas (ej. UPM, Carlos III)",
       "program": "Ej: Ingeniería Aeroespacial / Data Analyst",
+      "jobTitle": "Ej: Data Analyst",
       "specialty": "Selecciona una especialidad",
       "sector": "Público / Privado",
       "format": "Selecciona un formato",

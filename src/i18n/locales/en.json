@@ -121,6 +121,11 @@
       "programLink": "Program link",
       "centerLink": "Center/university link"
     },
+    "programTabs": {
+      "grado": "Bachelor's degree",
+      "master": "Master's",
+      "trabajo": "Job position"
+    },
     "placeholders": {
       "country": "Select a country",
       "ccaa": "Select a region",
@@ -128,6 +133,7 @@
       "city": "Type the city",
       "entity": "Search by name or acronym (e.g. UPM, Carlos III)",
       "program": "E.g. Aerospace Engineering / Data Analyst",
+      "jobTitle": "E.g. Data Analyst",
       "specialty": "Select a specialty",
       "sector": "Public / Private",
       "format": "Select a format",

@@ -89,6 +89,7 @@ export type Database = {
           requisitos: string | null
           sector: string | null
           tiempo_real: number | null
+          tipo_programa: string | null
           user_id: string | null
         }
         Insert: {
@@ -117,6 +118,7 @@ export type Database = {
           requisitos?: string | null
           sector?: string | null
           tiempo_real?: number | null
+          tipo_programa?: string | null
           user_id?: string | null
         }
         Update: {
@@ -145,6 +147,7 @@ export type Database = {
           requisitos?: string | null
           sector?: string | null
           tiempo_real?: number | null
+          tipo_programa?: string | null
           user_id?: string | null
         }
         Relationships: [

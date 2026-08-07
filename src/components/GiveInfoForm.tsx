@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import SearchableCombobox, { ComboboxOption } from "./SearchableCombobox";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   COUNTRIES,
   CCAA,
@@ -38,6 +39,8 @@ import {
   getUniversitiesByCountry,
 } from "@/data/universities";
 import { WorkExperienceEntry } from "@/data/experienceTypes";
+import { carrerasBySector } from "@/data/carrerasSuggestions";
+import { mastersBySector } from "@/data/masterSuggestions";
 
 interface GiveInfoFormProps {
   onBack: () => void;
@@ -52,6 +55,16 @@ const especialidades = [
 ];
 
 const formatos = ["Presencial", "Semipresencial", "Online"];
+
+type TipoPrograma = "grado" | "master" | "trabajo";
+
+// especialidad (form) -> id de sector usado por carrerasBySector/mastersBySector
+const especialidadToSectorId: Record<string, string> = {
+  "Ingeniería y Tecnología": "ingenieria",
+  "Ciencias sociales y jurídicas": "sociales",
+  "Artes y humanidades": "artes",
+  "Ciencias de la salud": "salud",
+};
 
 const abandonoLevels = [
   "Muy bajo (Nadie se va)",
@@ -84,6 +97,7 @@ interface FormState {
   especialidad: string;
   centro: string;
   programa: string;
+  tipoPrograma: TipoPrograma;
   sector: string;
   formato: string;
   idiomas: string;
@@ -109,6 +123,7 @@ const initialForm: FormState = {
   especialidad: "",
   centro: "",
   programa: "",
+  tipoPrograma: "grado",
   sector: "",
   formato: "",
   idiomas: "",
@@ -172,6 +187,20 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
     [i18n.language],
   );
 
+  // Grado/Máster options filtered by the chosen especialidad's sector id
+  const sectorId = especialidadToSectorId[form.especialidad] || "";
+  const carreraOptions: ComboboxOption[] = useMemo(
+    () => (carrerasBySector[sectorId] || []).map((name) => ({ value: name, label: name })),
+    [sectorId],
+  );
+  const masterOptions: ComboboxOption[] = useMemo(
+    () => (mastersBySector[sectorId] || []).map((name) => ({ value: name, label: name })),
+    [sectorId],
+  );
+
+  const handleTipoProgramaChange = (value: string) =>
+    setForm((prev) => ({ ...prev, tipoPrograma: value as TipoPrograma, programa: "" }));
+
   // Work experience handlers
   const addExperience = () =>
     setForm((p) => ({
@@ -216,6 +245,7 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
         ciudad: form.ciudad,
         centro: form.centro,
         programa: form.programa,
+        tipo_programa: form.tipoPrograma,
         especialidad: form.especialidad,
         sector: form.sector,
         formato: form.formato,
@@ -442,12 +472,41 @@ const GiveInfoForm = ({ onBack, apodo }: GiveInfoFormProps) => {
           </FieldWrapper>
 
           <FieldWrapper label={t("giveForm.labels.program")}>
-            <Input
-              placeholder={t("giveForm.placeholders.program")}
-              value={form.programa}
-              onChange={(e) => update("programa", e.target.value)}
-              maxLength={200}
-            />
+            <Tabs value={form.tipoPrograma} onValueChange={handleTipoProgramaChange}>
+              <TabsList className="grid grid-cols-3 w-full">
+                <TabsTrigger value="grado">{t("giveForm.programTabs.grado")}</TabsTrigger>
+                <TabsTrigger value="master">{t("giveForm.programTabs.master")}</TabsTrigger>
+                <TabsTrigger value="trabajo">{t("giveForm.programTabs.trabajo")}</TabsTrigger>
+              </TabsList>
+              <TabsContent value="grado">
+                <SearchableCombobox
+                  options={carreraOptions}
+                  value={form.programa}
+                  onChange={(v) => update("programa", v)}
+                  placeholder={t("questionnaire.searchCarrera")}
+                  emptyMessage={t("common.noResults")}
+                  allowCustom
+                />
+              </TabsContent>
+              <TabsContent value="master">
+                <SearchableCombobox
+                  options={masterOptions}
+                  value={form.programa}
+                  onChange={(v) => update("programa", v)}
+                  placeholder={t("questionnaire.searchMaster")}
+                  emptyMessage={t("common.noResults")}
+                  allowCustom
+                />
+              </TabsContent>
+              <TabsContent value="trabajo">
+                <Input
+                  placeholder={t("giveForm.placeholders.jobTitle")}
+                  value={form.programa}
+                  onChange={(e) => update("programa", e.target.value)}
+                  maxLength={200}
+                />
+              </TabsContent>
+            </Tabs>
           </FieldWrapper>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
