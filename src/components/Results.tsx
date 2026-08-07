@@ -197,7 +197,7 @@ const Results = ({ answers, onBack }: ResultsProps) => {
 
           {results.length === 0 && (
             <div className="text-center py-16 text-muted-foreground">
-              <p>{t("common.noResults")}</p>
+              <p>{t("results.empty")}</p>
             </div>
           )}
         </div>

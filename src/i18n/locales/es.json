@@ -186,6 +186,7 @@
     "title": "Tus recomendaciones",
     "subtitleBase": "Basadas en tu perfil:",
     "viewMore": "Ver más",
+    "empty": "Aún no hay reseñas para este programa. ¡Sé el primero en compartir tu experiencia!",
     "notFound": "¿No encuentras lo que buscas?",
     "repeatQuestionnaire": "Repetir cuestionario"
   },

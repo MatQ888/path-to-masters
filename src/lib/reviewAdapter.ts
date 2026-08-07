@@ -148,15 +148,12 @@ export const supabaseReviewToReview = (sr: SupabaseReview, companies: CompanySta
 
 /**
  * Filtra las reseñas según las respuestas del cuestionario "Obtener
- * información", por orden de prioridad (de más a menos importante):
- * masterBuscado > sectorAcademico > tipoEstudio > sectorPublicoPrivado >
- * formatoEstudio > lugar. Solo se activan los filtros cuya respuesta está
- * presente.
- *
- * Si aplicar todos los filtros activos da 0 resultados, se relaja quitando
- * el filtro de menor prioridad y se reintenta, hasta encontrar resultados o
- * quedarse sin filtros (en cuyo caso se devuelven todas las reseñas en vez
- * de una pantalla vacía).
+ * información": masterBuscado, sectorAcademico, tipoEstudio,
+ * sectorPublicoPrivado, formatoEstudio y lugar. Solo se activan los
+ * filtros cuya respuesta está presente, y todos los activos se aplican en
+ * conjunto (AND estricto). Si no hay ninguna reseña que cumpla todos los
+ * filtros activos, se devuelve un array vacío: no se muestran reseñas de
+ * otros programas a modo de relleno.
  */
 export const filterReviewsByAnswers = (
   reviews: SupabaseReview[],
@@ -195,11 +192,5 @@ export const filterReviewsByAnswers = (
     filters.push({ test: (r) => !!r.pais && r.pais !== "ES" });
   }
 
-  for (let activeCount = filters.length; activeCount > 0; activeCount--) {
-    const active = filters.slice(0, activeCount);
-    const matched = reviews.filter((r) => active.every((f) => f.test(r)));
-    if (matched.length > 0) return matched;
-  }
-
-  return reviews;
+  return reviews.filter((r) => filters.every((f) => f.test(r)));
 };

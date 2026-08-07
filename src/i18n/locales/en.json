@@ -186,6 +186,7 @@
     "title": "Your recommendations",
     "subtitleBase": "Based on your profile:",
     "viewMore": "View more",
+    "empty": "There are no reviews for this program yet. Be the first to share your experience!",
     "notFound": "Can't find what you're looking for?",
     "repeatQuestionnaire": "Retake questionnaire"
   },
