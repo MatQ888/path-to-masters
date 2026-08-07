@@ -15,9 +15,7 @@ export interface CompanyStat {
   percent: number;
 }
 
-interface AnswerFilter {
-  test: (review: SupabaseReview) => boolean;
-}
+type ReviewPredicate = (review: SupabaseReview) => boolean;
 
 // answers.sectorAcademico (id de sectorOptions) -> SupabaseReview.especialidad
 const especialidadBySector: Record<string, string> = {
@@ -148,49 +146,61 @@ export const supabaseReviewToReview = (sr: SupabaseReview, companies: CompanySta
 
 /**
  * Filtra las reseñas según las respuestas del cuestionario "Obtener
- * información": masterBuscado, sectorAcademico, tipoEstudio,
- * sectorPublicoPrivado, formatoEstudio y lugar. Solo se activan los
- * filtros cuya respuesta está presente, y todos los activos se aplican en
- * conjunto (AND estricto). Si no hay ninguna reseña que cumpla todos los
- * filtros activos, se devuelve un array vacío: no se muestran reseñas de
- * otros programas a modo de relleno.
+ * información".
+ *
+ * `sectorAcademico` (-> especialidad) es el filtro primario: siempre se
+ * aplica si hay respuesta, y si deja 0 reseñas se devuelve `[]` directamente
+ * (sin fallback), porque especialidad es un campo controlado y fiable.
+ *
+ * tipoEstudio, sectorPublicoPrivado, formatoEstudio y lugar son filtros
+ * secundarios: se aplican uno a uno, en ese orden, sobre el resultado
+ * acumulado, pero solo se conservan si no lo dejan en 0; si un filtro
+ * secundario deja 0 resultados se descarta y se sigue con el siguiente.
+ *
+ * `masterBuscado` no se usa para filtrar: `programa` es texto libre que el
+ * usuario escribe al dar información, así que nunca hace match fiable.
  */
 export const filterReviewsByAnswers = (
   reviews: SupabaseReview[],
   answers: Record<string, string>,
 ): SupabaseReview[] => {
-  const filters: AnswerFilter[] = [];
-
-  if (answers.masterBuscado) {
-    const programa = answers.masterBuscado;
-    filters.push({ test: (r) => r.programa === programa });
-  }
+  let current = reviews;
 
   if (answers.sectorAcademico) {
     const especialidad = especialidadBySector[answers.sectorAcademico];
-    if (especialidad) filters.push({ test: (r) => r.especialidad === especialidad });
+    if (especialidad) {
+      current = current.filter((r) => r.especialidad === especialidad);
+      if (current.length === 0) return [];
+    }
   }
+
+  const secondaryFilters: ReviewPredicate[] = [];
 
   if (answers.tipoEstudio) {
     const prefix = programaPrefixByTipo[answers.tipoEstudio];
-    if (prefix) filters.push({ test: (r) => !!r.programa?.startsWith(prefix) });
+    if (prefix) secondaryFilters.push((r) => !!r.programa?.startsWith(prefix));
   }
 
   if (answers.sectorPublicoPrivado) {
     const sector = answers.sectorPublicoPrivado;
-    filters.push({ test: (r) => r.sector === sector });
+    secondaryFilters.push((r) => r.sector === sector);
   }
 
   if (answers.formatoEstudio) {
     const formato = answers.formatoEstudio;
-    filters.push({ test: (r) => r.formato === formato });
+    secondaryFilters.push((r) => r.formato === formato);
   }
 
   if (answers.lugar === "Nacional") {
-    filters.push({ test: (r) => r.pais === "ES" });
+    secondaryFilters.push((r) => r.pais === "ES");
   } else if (answers.lugar === "Internacional") {
-    filters.push({ test: (r) => !!r.pais && r.pais !== "ES" });
+    secondaryFilters.push((r) => !!r.pais && r.pais !== "ES");
   }
 
-  return reviews.filter((r) => filters.every((f) => f.test(r)));
+  for (const test of secondaryFilters) {
+    const narrowed = current.filter(test);
+    if (narrowed.length > 0) current = narrowed;
+  }
+
+  return current;
 };
